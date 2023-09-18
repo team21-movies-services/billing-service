@@ -16,7 +16,7 @@ profile = "black"
 src_paths = ["src/app"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10 || ^3.11"
 fastapi = "^0.100.0"
 pydantic = "^2.1.1"
 python-dotenv = "^1.0.0"
