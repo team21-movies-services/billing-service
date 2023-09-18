@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+
+  billing-service-nginx:
+    build:
+      context: .
+      dockerfile: infra/nginx/Dockerfile
+    container_name: billing-service-nginx
+    restart: unless-stopped
+    networks:
+      - billing-service-network
+    depends_on:
+      - billing-service-api
+
+  billing-service-api:
+    container_name: billing-service-api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: infra/backend/Dockerfile
+    networks:
+      - billing-service-network
+    depends_on:
+      billing-service-redis:
+        condition: service_healthy
+    env_file:
+      - ./src/.env
+
+  billing-service-redis:
+    container_name: billing-service-redis
+    image: redis:7.0.8-alpine
+    restart: unless-stopped
+    networks:
+      - billing-service-network
+    healthcheck:
+      test: redis-cli ping >/dev/null || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  billing-service-network:
+    external:
+      name: billing-service-network

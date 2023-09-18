@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+
+  billing-service-nginx:
+    ports:
+      - ${FRONTEND_PORT:-80}:80
+
+  billing-service-api:
+    expose:
+      - 8001
+    command: poetry run gunicorn -c gunicorn.conf.py main:app
+
