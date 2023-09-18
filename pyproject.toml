@@ -44,6 +44,10 @@ flake8-pytest-style = "^1.7.2"
 black = "^23.7.0"
 isort = "^5.12.0"
 types-redis = "^4.6.0.3"
+motor-types = "^1.0.0b2"
+flake8-html = "^0.4.3"
+types-croniter = "^1.4.0.1"
+types-requests = "^2.31.0.2"
 
 [build-system]
 requires = ["poetry-core"]
