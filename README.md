@@ -1,5 +1,3 @@
-test
-
 # billing-service
 
 * link = https://github.com/team21-movies-services/billing-service
