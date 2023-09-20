@@ -43,3 +43,16 @@ make up-local
 ```
 
 4) go to `http://localhost:8000/docs`
+
+# Миграции
+
+```
+cd ./src/
+withenv ./.env.local poetry run alembic revision --autogenerate -m "init_database"
+```
+
+## Добавление зависимостей через poetry
+
+```
+poetry add psycopg[binary] sqlalchemy alembic
+```
