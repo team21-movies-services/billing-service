@@ -1,0 +1,21 @@
+version: "3.8"
+
+
+services:
+
+  test-billing-service-api:
+    container_name: test-billing-service-api
+    build:
+      context: .
+      dockerfile: infra/backend-test/Dockerfile
+    networks:
+      - test-billing-service-network
+    env_file:
+      - ./src/.env.test
+    command: poetry run pytest -p no:cacheprovider
+
+networks:
+  test-billing-service-network:
+    external: true
+volumes:
+  test_db_data:
