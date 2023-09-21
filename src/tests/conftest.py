@@ -2,7 +2,10 @@ import asyncio
 
 import pytest
 
-pytest_plugins = ("tests.plugins.api_client", "tests.plugins.auth_user")
+pytest_plugins = (
+    "tests.app.functional.plugins.api_client",
+    "tests.app.functional.plugins.auth_user",
+)
 
 
 @pytest.fixture(scope="session")
