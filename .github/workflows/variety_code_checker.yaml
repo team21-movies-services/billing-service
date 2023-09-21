@@ -56,7 +56,7 @@ jobs:
           isort-report.txt
 
   send_notification:
-    needs: linter
+    needs: [linter, tests]
     runs-on: ubuntu-latest
     if: ${{ success() }}
 
