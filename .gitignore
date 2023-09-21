@@ -6,9 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-#pytest-reports
-pytest-reports
-
 # Distribution / packaging
 .Python
 build/

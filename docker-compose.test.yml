@@ -10,11 +10,9 @@ services:
       dockerfile: infra/backend-test/Dockerfile
     networks:
       - test-billing-service-network
-    volumes:
-      - ./pytest-reports/:/opt/app/pytest-reports
     env_file:
       - ./src/.env.test
-    command: poetry run pytest -p no:cacheprovider --html=pytest-reports/pytest-report.html
+    command: poetry run pytest -p no:cacheprovider
 
 networks:
   test-billing-service-network:
