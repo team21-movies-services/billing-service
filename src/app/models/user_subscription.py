@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import PrimaryKeyConstraint
-from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
+from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import Mapped
 
 from models.base import BaseModel, Column, RestrictForeignKey
@@ -14,9 +14,7 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     """Data model for public.user_subscriptions db table."""
 
     __tablename__ = "user_subscriptions"
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='user_subscriptions_pkey'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('id', name='user_subscriptions_pkey'),)
 
     tariff_id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),

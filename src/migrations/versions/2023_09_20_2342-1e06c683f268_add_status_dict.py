@@ -7,10 +7,10 @@ Create Date: 2023-09-20 23:42:48.573798
 """
 from typing import Sequence, Union
 from uuid import uuid4
+
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import orm
-
 
 # revision identifiers, used by Alembic.
 revision: str = '1e06c683f268'
@@ -20,7 +20,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-
     db_bind = op.get_bind()
     session = orm.Session(bind=db_bind)
     session.execute(

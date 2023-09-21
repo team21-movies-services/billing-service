@@ -12,9 +12,7 @@ class PaySystem(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     """Data model for public.pay_systems db table."""
 
     __tablename__ = "pay_systems"
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='pay_system_pkey'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('id', name='pay_system_pkey'),)
     id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),
         default=uuid.uuid4,

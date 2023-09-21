@@ -14,3 +14,7 @@ per-file-ignores =
         F401
         # unable to detect undefined names
         F403
+    *tests/*: S101, C812
+
+exclude =
+    */migrations/*

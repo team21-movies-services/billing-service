@@ -1,22 +1,20 @@
 import uuid
 
-from sqlalchemy import PrimaryKeyConstraint, Text, Numeric
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Numeric, PrimaryKeyConstraint, Text
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped
 
 from models.base import BaseModel, Column, RestrictForeignKey
 from models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
-from models.pay_system import PaySystem
 from models.pay_status import PayStatus
+from models.pay_system import PaySystem
 
 
 class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     """Data model for public.user_payments db table."""
 
     __tablename__ = "user_payments"
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='user_payment_pkey'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('id', name='user_payment_pkey'),)
 
     pay_system_id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),

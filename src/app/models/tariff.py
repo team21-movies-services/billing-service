@@ -1,6 +1,6 @@
 from enum import StrEnum, auto
 
-from sqlalchemy import PrimaryKeyConstraint, String, Numeric, Integer, Enum
+from sqlalchemy import Integer, Numeric, PrimaryKeyConstraint, String
 from sqlalchemy.dialects.postgresql import ENUM, JSONB
 from sqlalchemy.orm import Mapped
 
@@ -18,9 +18,7 @@ class Tariff(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     """Data model for public.tariffs db table."""
 
     __tablename__ = "tariffs"
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='tariff_pkey'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('id', name='tariff_pkey'),)
 
     name: Mapped[str] = Column(String(127), nullable=False, comment="Название тарифа")
     alias: Mapped[str] = Column(String(127), nullable=False, comment="Алиас для обращения в коде")
