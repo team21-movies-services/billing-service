@@ -1,4 +1,4 @@
-name: Pytest
+name: Pytes
 
 on: [pull_request]
 
@@ -7,8 +7,14 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Create docker network
       run: 	docker network create test-billing-service-network 2>/dev/null || echo "test-billing-service-network is up-to-date"
     - name: Start all containers and pytest
       run: 	docker compose -p test_billing_service -f docker-compose.test.yml up --build --exit-code-from test-billing-service-api
+    - name: Save pytest reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest-reports
+        run: ls
+        path: pytest-reports/pytest-report.html
