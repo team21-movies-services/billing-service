@@ -30,7 +30,7 @@ RUN pip install --user --upgrade pip && \
     pip install --user --no-cache-dir poetry
 
 COPY pyproject.toml pyproject.toml
-RUN poetry install --no-root
+RUN poetry install --no-root && mkdir -p pytest-reports/assets
 
 WORKDIR $APP_DIR
 
