@@ -1,7 +1,5 @@
-import uuid
-
 from sqlalchemy import PrimaryKeyConstraint, String
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped
 
 from models.base import BaseModel, Column
@@ -13,12 +11,6 @@ class PaySystem(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
 
     __tablename__ = "pay_systems"
     __table_args__ = (PrimaryKeyConstraint('id', name='pay_system_pkey'),)
-    id: Mapped[uuid.UUID] = Column(
-        UUID(as_uuid=True),
-        default=uuid.uuid4,
-        nullable=False,
-        primary_key=True,
-    )
 
     name: Mapped[str] = Column(String(127), nullable=False, comment="Название платёжной системы")
     alias: Mapped[str] = Column(String(127), nullable=False, comment="Алиас для обращения в коде")
