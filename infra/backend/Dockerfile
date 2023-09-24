@@ -31,11 +31,9 @@ RUN pip install --user --upgrade pip && \
 COPY pyproject.toml pyproject.toml
 RUN poetry install --no-root --only main
 
-WORKDIR $APP_DIR
-
 # Копирования кода приложения
-COPY ./src/app $APP_DIR
-COPY ./src/gunicorn.conf.py $APP_DIR
+COPY ./src/app $SRC_DIR
+COPY ./src/gunicorn.conf.py $SRC_DIR
 
 EXPOSE 8000
 
