@@ -2,7 +2,7 @@ from typing import Union
 
 from redis.asyncio import Redis
 
-from clients.cache.base import CacheServiceABC
+from app.clients.cache.base import CacheServiceABC
 
 
 class RedisCacheService(CacheServiceABC):

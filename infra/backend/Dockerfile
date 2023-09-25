@@ -5,6 +5,7 @@ ENV SRC_DIR=/opt
 
 # Путь до приложения fastapi
 ENV APP_DIR=$SRC_DIR/app
+ENV SHARED_DIR=$SRC_DIR/shared
 
 ENV APP_USER=backend-user
 
@@ -32,8 +33,9 @@ COPY pyproject.toml pyproject.toml
 RUN poetry install --no-root --only main
 
 # Копирования кода приложения
-COPY ./src/app $SRC_DIR
-COPY ./src/gunicorn.conf.py $SRC_DIR
+COPY ./src/app $APP_DIR
+COPY ./src/shared $SHARED_DIR
+COPY ./src/gunicorn.conf.py $APP_DIR
 
 EXPOSE 8000
 

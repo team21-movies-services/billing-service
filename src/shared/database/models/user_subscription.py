@@ -1,13 +1,12 @@
 import uuid
 from datetime import datetime
 
+from shared.database.models.base import BaseModel, Column, RestrictForeignKey
+from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
+from shared.database.models.tariff import Tariff
 from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import Mapped
-
-from models.base import BaseModel, Column, RestrictForeignKey
-from models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
-from models.tariff import Tariff
 
 
 class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):

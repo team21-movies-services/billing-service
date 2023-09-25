@@ -2,9 +2,9 @@ from uuid import uuid4
 
 import pytest_asyncio
 
-from dependencies.auth import get_auth_data
-from main import app
-from schemas.domain.auth import AuthData
+from app.dependencies.auth import get_auth_data
+from app.main import app
+from app.schemas.domain.auth import AuthData
 
 
 @pytest_asyncio.fixture(name='auth_user', scope='session')
