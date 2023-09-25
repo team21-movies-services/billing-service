@@ -28,7 +28,7 @@ services:
         ]
       interval: 5s
       timeout: 5s
-      retries: 5    
+      retries: 5
     networks:
       - billing-service-network
     env_file:
@@ -61,6 +61,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  billing-service-migration:
+    container_name: billing-service-migration
+    build:
+      context: .
+      dockerfile: infra/backend/Dockerfile
+    networks:
+      - billing-service-network
+    depends_on:
+      billing-service-postgres:
+        condition: service_healthy
+    env_file:
+      - ./src/.env
+    command: poetry run alembic upgrade head
 
 networks:
   billing-service-network:

@@ -26,3 +26,9 @@ services:
   billing-service-redis:
     ports:
       - ${REDIS_PORT:-6379}:6379
+
+  billing-service-migration:
+    volumes:
+      - ./src/app:/opt/app
+      - ./src/migrations:/opt/migrations
+      - ./src/alembic.ini:/opt/alembic.ini
