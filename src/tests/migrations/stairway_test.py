@@ -12,13 +12,9 @@ from alembic.script import Script, ScriptDirectory
 
 
 def get_revisions():
-    # Create Alembic configuration object
-    # (we don't need database for getting revisions list)
     config = Config("alembic.ini")
-    # Get directory object with Alembic migrations
     revisions_dir = ScriptDirectory.from_config(config)
 
-    # Get & sort migrations, from first to last
     revisions = list(revisions_dir.walk_revisions('base', 'heads'))
     revisions.reverse()
     return revisions
