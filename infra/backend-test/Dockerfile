@@ -39,6 +39,8 @@ WORKDIR $SRC_DIR
 COPY ./src/app $APP_DIR
 COPY ./src/shared $SHARED_DIR
 COPY ./src/tests $TESTS_DIR
+COPY ./src/migrations $SRC_DIR/migrations
+COPY ./src/alembic.ini $SRC_DIR/
 
 EXPOSE 8000
 

@@ -56,7 +56,18 @@ types-requests = "^2.31.0.2"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
+sqlalchemy-utils = "^0.41.1"
+pytest-ordering = "^0.6"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "last: mark test to run last",
+]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore:.*general_plain_validator_function.*"
+]

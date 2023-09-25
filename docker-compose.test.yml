@@ -10,10 +10,27 @@ services:
       dockerfile: infra/backend-test/Dockerfile
     networks:
       - test-billing-service-network
+    depends_on:
+      - test-billing-service-postgres
     env_file:
       - ./src/.env.test
-    command: poetry run pytest -p no:cacheprovider
+    command: poetry run pytest -p no:cacheprovider tests
 
+
+  test-billing-service-postgres:
+    image: postgres:14
+    container_name: test-billing-service-postgres
+    environment:
+      POSTGRES_DB:
+    env_file:
+      - ./src/.env.test
+    networks:
+      - test-billing-service-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - test_db_data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "log_statement=all"]
 networks:
   test-billing-service-network:
     external: true
