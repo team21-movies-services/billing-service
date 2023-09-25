@@ -20,7 +20,6 @@ def get_revisions():
     return revisions
 
 
-@pytest.mark.last
 @pytest.mark.parametrize('revision', get_revisions())
 def test_migrations_stairway(alembic_config: Config, revision: Script, single_use_database):
     upgrade(alembic_config, revision.revision)
