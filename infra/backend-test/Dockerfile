@@ -5,7 +5,8 @@ ENV SRC_DIR=/opt
 
 # Путь до приложения fastapi
 ENV APP_DIR=$SRC_DIR/app
-ENV TESTS_DIR=$APP_DIR/tests
+ENV TESTS_DIR=$SRC_DIR/tests
+ENV SHARED_DIR=$SRC_DIR/shared
 
 ENV APP_USER=backend-user
 
@@ -32,11 +33,11 @@ RUN pip install --user --upgrade pip && \
 COPY pyproject.toml pyproject.toml
 RUN poetry install --no-root
 
-WORKDIR $APP_DIR
+WORKDIR $SRC_DIR
 
 # Копирования кода приложения
 COPY ./src/app $APP_DIR
-COPY ./src/gunicorn.conf.py $APP_DIR
+COPY ./src/shared $SHARED_DIR
 COPY ./src/tests $TESTS_DIR
 COPY ./src/migrations $APP_DIR/migrations
 COPY ./src/alembic.ini $APP_DIR/
