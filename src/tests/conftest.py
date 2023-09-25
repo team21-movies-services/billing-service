@@ -7,7 +7,7 @@ from alembic.config import Config
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy_utils import create_database, drop_database
 
-from core.config import settings
+from app.core.config import settings
 
 pytest_plugins = (
     "tests.app.functional.plugins.api_client",
