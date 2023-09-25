@@ -1,5 +1,4 @@
 import uuid
-from decimal import Decimal
 
 from shared.database.models.base import BaseModel, Column, RestrictForeignKey
 from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
@@ -7,7 +6,7 @@ from shared.database.models.pay_status import PayStatus
 from shared.database.models.pay_system import PaySystem
 from sqlalchemy import Numeric, PrimaryKeyConstraint, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import Mapped
 
 
 class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
@@ -35,7 +34,7 @@ class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         comment="ID пользователя",
     )
     payment_id: Mapped[str] = Column(Text, nullable=False, comment="ID платежа во внешней системе")
-    amount: Mapped[Decimal] = Column(Numeric(2), nullable=False, comment="Сумма платежа")
+    amount: Mapped[str] = Column(Numeric(2), nullable=False, comment="Сумма платежа")
     purpose: Mapped[str] = Column(Text, nullable=False, comment="Назначение платежа")
 
     json_sale: Mapped[dict] = Column(
@@ -45,6 +44,3 @@ class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         server_default='{}',
         comment="Детали платежа (request/response)",
     )
-
-    pay_system: Mapped[PaySystem] = relationship()
-    pay_status: Mapped[PayStatus] = relationship()

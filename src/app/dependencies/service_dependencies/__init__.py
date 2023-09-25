@@ -1,6 +1,5 @@
 from .auth_service_factory import create_auth_service
 from .pay_system_factory import create_pay_system_service
-from .payment_factory import create_payment_service
 from .status_service_factory import create_status_service
 from .subscription_factory import create_subscription_service
 from .tariff_factory import create_tariff_service
