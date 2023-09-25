@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from providers import BaseProvider
+from app.providers import BaseProvider
 
 
 class SQLAlchemyProvider(BaseProvider):

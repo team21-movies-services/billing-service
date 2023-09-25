@@ -2,8 +2,8 @@ import logging
 
 from fastapi import APIRouter, Depends, status
 
-from schemas.response.pay_system import PaySystemResponse
-from services.pay_system import PaySystemServiceABC
+from app.schemas.response.pay_system import PaySystemResponse
+from app.services.pay_system import PaySystemServiceABC
 
 router = APIRouter(prefix='/pay-systems', tags=['Pay Systems'])
 

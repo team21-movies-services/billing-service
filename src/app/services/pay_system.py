@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from repositories.pay_system import PaySystemRepositoryABC
-from schemas.response.pay_system import PaySystemResponse
+from app.repositories.pay_system import PaySystemRepositoryABC
+from app.schemas.response.pay_system import PaySystemResponse
 
 
 class PaySystemServiceABC(ABC):

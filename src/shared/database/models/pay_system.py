@@ -1,9 +1,8 @@
+from shared.database.models.base import BaseModel, Column
+from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 from sqlalchemy import PrimaryKeyConstraint, String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped
-
-from models.base import BaseModel, Column
-from models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 
 
 class PaySystem(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):

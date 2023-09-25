@@ -3,8 +3,8 @@ from typing import Any, Optional
 
 from httpx import AsyncClient, codes
 
-from clients.http.base import AsyncHTTPClientABC
-from clients.http.exceptions import ClientErrorException
+from app.clients.http.base import AsyncHTTPClientABC
+from app.clients.http.exceptions import ClientErrorException
 
 logger = logging.getLogger(__name__)
 

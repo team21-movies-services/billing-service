@@ -2,10 +2,10 @@ import logging
 
 from fastapi import FastAPI
 
-from core.config import Settings
-from providers.cache_providers import RedisProvider
-from providers.http_providers import HTTPXClientProvider
-from providers.pg_providers import SQLAlchemyProvider
+from app.core.config import Settings
+from app.providers.cache_providers import RedisProvider
+from app.providers.http_providers import HTTPXClientProvider
+from app.providers.pg_providers import SQLAlchemyProvider
 
 logger = logging.getLogger(__name__)
 

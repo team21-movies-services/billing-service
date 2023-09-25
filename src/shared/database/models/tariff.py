@@ -1,11 +1,10 @@
 from enum import StrEnum, auto
 
+from shared.database.models.base import BaseModel, Column
+from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 from sqlalchemy import Integer, Numeric, PrimaryKeyConstraint, String
 from sqlalchemy.dialects.postgresql import ENUM, JSONB
 from sqlalchemy.orm import Mapped
-
-from models.base import BaseModel, Column
-from models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 
 
 class TariffPeriodUnit(StrEnum):
