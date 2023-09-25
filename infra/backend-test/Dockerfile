@@ -38,6 +38,8 @@ WORKDIR $APP_DIR
 COPY ./src/app $APP_DIR
 COPY ./src/gunicorn.conf.py $APP_DIR
 COPY ./src/tests $TESTS_DIR
+COPY ./src/migrations $APP_DIR/migrations
+COPY ./src/alembic.ini $APP_DIR/
 
 EXPOSE 8000
 

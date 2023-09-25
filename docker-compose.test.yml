@@ -10,33 +10,27 @@ services:
       dockerfile: infra/backend-test/Dockerfile
     networks:
       - test-billing-service-network
+    depends_on:
+      - test-billing-service-postgres
     env_file:
       - ./src/.env.test
-    command: poetry run pytest -p no:cacheprovider
+    command: poetry run pytest -p no:cacheprovider tests
+
 
   test-billing-service-postgres:
     image: postgres:14
     container_name: test-billing-service-postgres
     environment:
-      POSTGRES_DB: TEST_DB
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      POSTGRES_DB:
+    env_file:
+      - ./src/.env.test
     networks:
       - test-billing-service-network
-    env_file:
-      - ./.env
+    ports:
+      - "5432:5432"
     volumes:
       - test_db_data:/var/lib/postgresql/data
-
+    command: ["postgres", "-c", "log_statement=all"]
 networks:
   test-billing-service-network:
     external: true
