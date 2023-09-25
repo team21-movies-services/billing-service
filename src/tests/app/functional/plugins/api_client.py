@@ -1,8 +1,8 @@
 import pytest_asyncio
 from httpx import AsyncClient
 
-from dependencies.auth import get_auth_data
-from main import app
+from app.dependencies.auth import get_auth_data
+from app.main import app
 
 
 @pytest_asyncio.fixture(name="api_client", scope='session')
