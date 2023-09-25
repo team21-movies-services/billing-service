@@ -1,10 +1,10 @@
 from logging.config import fileConfig
 
 from alembic import context
+from shared.database.models.base import BaseModel
 from sqlalchemy import engine_from_config, pool
 
-from core.config import Settings
-from models.base import BaseModel
+from app.core.config import Settings
 
 settings = Settings()
 

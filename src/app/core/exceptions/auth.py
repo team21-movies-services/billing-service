@@ -1,4 +1,4 @@
-from core.exceptions.base import AppException
+from app.core.exceptions.base import AppException
 
 
 class AuthException(AppException):

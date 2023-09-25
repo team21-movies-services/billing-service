@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, Optional
 
 from fastapi import FastAPI
 
-from dependencies.mapping import dependencies_map
+from app.dependencies.mapping import dependencies_map
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
-from dependencies.registrator import add_factory_to_mapper
-from dependencies.repository_dependencies.pay_system import PaySystemRepositoryDep
-from services.pay_system import PaySystemService, PaySystemServiceABC
+from app.dependencies.registrator import add_factory_to_mapper
+from app.dependencies.repository_dependencies.pay_system import PaySystemRepositoryDep
+from app.services.pay_system import PaySystemService, PaySystemServiceABC
 
 
 @add_factory_to_mapper(PaySystemServiceABC)

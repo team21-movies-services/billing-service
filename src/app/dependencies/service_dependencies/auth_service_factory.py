@@ -1,9 +1,9 @@
 from fastapi import Depends
 
-from core.config import Settings
-from dependencies.registrator import add_factory_to_mapper
-from dependencies.settings import get_settings
-from services.auth import AuthService, AuthServiceABC
+from app.core.config import Settings
+from app.dependencies.registrator import add_factory_to_mapper
+from app.dependencies.settings import get_settings
+from app.services.auth import AuthService, AuthServiceABC
 
 
 @add_factory_to_mapper(AuthServiceABC)

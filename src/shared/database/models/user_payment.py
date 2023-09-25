@@ -1,13 +1,12 @@
 import uuid
 
+from shared.database.models.base import BaseModel, Column, RestrictForeignKey
+from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
+from shared.database.models.pay_status import PayStatus
+from shared.database.models.pay_system import PaySystem
 from sqlalchemy import Numeric, PrimaryKeyConstraint, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped
-
-from models.base import BaseModel, Column, RestrictForeignKey
-from models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
-from models.pay_status import PayStatus
-from models.pay_system import PaySystem
 
 
 class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):

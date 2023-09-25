@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
+from shared.database.models.pay_system import PaySystem
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
 
-from models.pay_system import PaySystem
-from schemas.response.pay_system import PaySystemResponse
+from app.schemas.response.pay_system import PaySystemResponse
 
 
 class PaySystemRepositoryABC(ABC):

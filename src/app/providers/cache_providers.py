@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from redis.asyncio import Redis
 
-from core.exceptions import AppException
-from providers import BaseProvider
+from app.core.exceptions import AppException
+from app.providers import BaseProvider
 
 
 class RedisProvider(BaseProvider):

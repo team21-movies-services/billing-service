@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from schemas.response.status import StatusResponse
+from app.schemas.response.status import StatusResponse
 
 
 class StatusServiceABC(ABC):

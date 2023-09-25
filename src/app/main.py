@@ -3,12 +3,12 @@ from logging import config as logging_config
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from api.routers.main import setup_routers
-from core.config import Settings
-from core.logger import LOGGING
-from dependencies.main import setup_dependencies
-from middleware.main import setup_middleware
-from providers.main import setup_providers
+from app.api.routers.main import setup_routers
+from app.core.config import Settings
+from app.core.logger import LOGGING
+from app.dependencies.main import setup_dependencies
+from app.middleware.main import setup_middleware
+from app.providers.main import setup_providers
 
 # Применяем настройки логирования
 logging_config.dictConfig(LOGGING)
