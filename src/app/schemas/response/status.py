@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from .base import BaseModelResponse
 
 
-class StatusResponse(BaseModel):
+class StatusResponse(BaseModelResponse):
     api: bool
