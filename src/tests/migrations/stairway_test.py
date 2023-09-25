@@ -23,7 +23,6 @@ def get_revisions():
 @pytest.mark.last
 @pytest.mark.parametrize('revision', get_revisions())
 def test_migrations_stairway(alembic_config: Config, revision: Script, single_use_database):
-    # assert single_use_database.url == 0
     upgrade(alembic_config, revision.revision)
     alembic_config.set_main_option("sqlalchemy.url", str(single_use_database.url))
     # We need -1 for downgrading first migration (its down_revision is None)

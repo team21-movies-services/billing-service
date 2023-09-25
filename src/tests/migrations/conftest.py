@@ -13,7 +13,7 @@ def alembic_config():
     return Config("alembic.ini")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def single_use_database():
     """
     SQLAlchemy engine, for single use
