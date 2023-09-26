@@ -38,7 +38,7 @@ class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     amount: Mapped[Decimal] = Column(Numeric(2), nullable=False, comment="Сумма платежа")
     purpose: Mapped[str] = Column(Text, nullable=False, comment="Назначение платежа")
 
-    json_sale: Mapped[dict] = Column(
+    json_detail: Mapped[dict] = Column(
         JSONB,
         nullable=False,
         default={},

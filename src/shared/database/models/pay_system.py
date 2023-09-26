@@ -23,3 +23,6 @@ class PaySystem(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         server_default='{}',
         comment="Доп. данные платежной системы",
     )
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
