@@ -77,6 +77,18 @@ services:
       - ./src/.env
     command: poetry run alembic upgrade head
 
+  billing-service-scheduler:
+    container_name: billing-service-scheduler
+    build:
+      context: .
+      dockerfile: infra/scheduler/Dockerfile
+    networks:
+      - billing-service-network
+    depends_on:
+      billing-service-postgres:
+        condition: service_healthy
+    command: poetry run python scheduler/main.py
+
 networks:
   billing-service-network:
     external:
