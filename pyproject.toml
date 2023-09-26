@@ -62,6 +62,7 @@ sqlalchemy-utils = "^0.41.1"
 sqlalchemy = "^2.0.21"
 psycopg = {extras = ["binary"], version = "^3.1.10"}
 croniter = "^1.4.1"
+rodi = "^2.0.3"
 
 
 [build-system]

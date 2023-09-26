@@ -1616,6 +1616,17 @@ pygments = ">=2.13.0,<3.0.0"
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
+name = "rodi"
+version = "2.0.3"
+description = "Implementation of dependency injection for Python 3"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "rodi-2.0.3-py3-none-any.whl", hash = "sha256:cd0f3c03540cde58c6858eb80959e00f7dd2f2e48c175ccaefd30126e84cdc12"},
+    {file = "rodi-2.0.3.tar.gz", hash = "sha256:0481a87e8152d9ec835203e22f8fccf3df0d4938cfe72d634767f4cdb4fb9f0a"},
+]
+
+[[package]]
 name = "setuptools"
 version = "68.2.2"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -1941,4 +1952,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10 || ^3.11"
-content-hash = "24562994c2f07cecfcc51f0018c7b0be43101ef3c7b77efc90e63212439fcbf8"
+content-hash = "d0ef7140306b369268a81a7fbb22ff5d7f2bcbc52485210fd6cb5fcb5fef68cd"
