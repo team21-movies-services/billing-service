@@ -3,13 +3,13 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from app.repositories.payment import PaymentRepositoryABC
-from app.schemas.request.pagination import PaymentsPagination
+from app.schemas.request.pagination import Pagination
 from app.schemas.response.payment import UserPaymentResponse
 
 
 class PaymentServiceABC(ABC):
     @abstractmethod
-    async def get_all_by_user_id(self, user_id: UUID, pagination: PaymentsPagination) -> list[UserPaymentResponse]:
+    async def get_all_by_user_id(self, user_id: UUID, pagination: Pagination) -> list[UserPaymentResponse]:
         raise NotImplementedError
 
 
@@ -17,5 +17,5 @@ class PaymentServiceABC(ABC):
 class PaymentService(PaymentServiceABC):
     _payment_repository: PaymentRepositoryABC
 
-    async def get_all_by_user_id(self, user_id: UUID, pagination: PaymentsPagination) -> list[UserPaymentResponse]:
+    async def get_all_by_user_id(self, user_id: UUID, pagination: Pagination) -> list[UserPaymentResponse]:
         return await self._payment_repository.get_all_by_user_id(user_id, pagination)

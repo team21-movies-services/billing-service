@@ -6,18 +6,18 @@ from sqlalchemy.orm import contains_eager
 from sqlalchemy.sql import desc, select
 
 from app.repositories.base import SQLAlchemyRepo
-from app.schemas.request.pagination import PaymentsPagination
+from app.schemas.request.pagination import Pagination
 from app.schemas.response.payment import UserPaymentResponse
 
 
 class PaymentRepositoryABC(ABC):
     @abstractmethod
-    async def get_all_by_user_id(self, user_id: UUID, pagination: PaymentsPagination) -> list[UserPaymentResponse]:
+    async def get_all_by_user_id(self, user_id: UUID, pagination: Pagination) -> list[UserPaymentResponse]:
         raise NotImplementedError
 
 
 class PaymentRepository(SQLAlchemyRepo, PaymentRepositoryABC):
-    async def get_all_by_user_id(self, user_id: UUID, pagination: PaymentsPagination) -> list[UserPaymentResponse]:
+    async def get_all_by_user_id(self, user_id: UUID, pagination: Pagination) -> list[UserPaymentResponse]:
         query = (
             select(UserPayment)
             .where(UserPayment.user_id == user_id)
