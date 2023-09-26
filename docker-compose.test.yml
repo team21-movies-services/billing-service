@@ -7,7 +7,8 @@ services:
     container_name: test-billing-service-api
     build:
       context: .
-      dockerfile: infra/backend-test/Dockerfile
+      dockerfile: infra/backend/Dockerfile
+      target: test
     networks:
       - test-billing-service-network
     depends_on:

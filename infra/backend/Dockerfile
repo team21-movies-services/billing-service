@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim as main
 
 # Основной путь приложения
 ENV SRC_DIR=/opt
@@ -32,6 +32,7 @@ RUN pip install --user --upgrade pip && \
 COPY pyproject.toml pyproject.toml
 RUN poetry install --no-root --only main
 
+
 # Копирования кода приложения
 COPY ./src/app $APP_DIR
 COPY ./src/shared $SHARED_DIR
@@ -40,3 +41,11 @@ COPY ./src/gunicorn.conf.py $APP_DIR
 EXPOSE 8000
 
 COPY infra/backend/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+FROM main as test
+
+RUN poetry install --no-root
+
+COPY ./src/tests $SRC_DIR/tests
+COPY ./src/migrations $SRC_DIR/migrations
+COPY ./src/alembic.ini $SRC_DIR/
