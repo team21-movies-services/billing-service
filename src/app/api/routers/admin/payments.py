@@ -11,7 +11,7 @@ class PaymentsAdminView(ModelView, model=UserPayment):  # type: ignore
         UserPayment.purpose,
         UserPayment.pay_system,
         UserPayment.pay_status,
-        UserPayment.json_detail,
+        UserPayment.json_sale,
     ]
 
     column_labels = {
@@ -19,7 +19,7 @@ class PaymentsAdminView(ModelView, model=UserPayment):  # type: ignore
         UserPayment.user_id: "ID пользователя",
         UserPayment.amount: "Сумма платежа",
         UserPayment.purpose: "Назначение платежа",
-        UserPayment.json_detail: "Детали платежа",
+        UserPayment.json_sale: "Детали платежа",
         UserPayment.pay_system_id: "ID платежной системы",
         UserPayment.pay_status_id: "ID статуса платежа",
         UserPayment.payment_id: "ID платежа во внешней системе",

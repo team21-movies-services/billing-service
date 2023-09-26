@@ -22,7 +22,7 @@ class Tariff(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     name: Mapped[str] = Column(String(127), nullable=False, comment="Название тарифа")
     alias: Mapped[str] = Column(String(127), nullable=False, comment="Алиас для обращения в коде")
 
-    cost: Mapped[str] = Column(Numeric(3), nullable=False, comment="Цена тарифа")
+    cost: Mapped[str] = Column(Numeric(2), nullable=False, comment="Цена тарифа")
     period: Mapped[int] = Column(Integer, nullable=False, comment="Период действия тарифа")
 
     period_unit: Mapped[str] = Column(
