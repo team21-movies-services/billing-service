@@ -37,7 +37,7 @@ async def db_session_with_migrations(_create_test_db):
     session_maker = async_sessionmaker(bind=engine, expire_on_commit=False)
     alembic_cfg = Config("alembic.ini")
     alembic_cfg.set_main_option("sqlalchemy.url", settings.postgres.database_url)
-    command.upgrade(alembic_cfg, "head")
+    command.upgrade(alembic_cfg, "fe102f372c62")
     async with session_maker() as session:
         yield session
     await engine.dispose()
