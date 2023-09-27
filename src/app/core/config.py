@@ -34,10 +34,17 @@ class PostgresConfig(BaseSettings):
         return f"postgresql+psycopg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 
+class AdminConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="ADMIN_")
+
+    debug: bool = Field(default=False)
+
+
 class Settings(BaseSettings):
     project: ProjectConfig = ProjectConfig()
     redis: RedisConfig = RedisConfig()
     postgres: PostgresConfig = PostgresConfig()
+    admin: AdminConfig = AdminConfig()
 
 
 settings = Settings()
