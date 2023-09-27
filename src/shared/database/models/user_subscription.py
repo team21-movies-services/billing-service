@@ -6,7 +6,7 @@ from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdate
 from shared.database.models.tariff import Tariff
 from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 
 
 class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
@@ -38,3 +38,5 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         nullable=False,
         comment="Дата и время окончания действия подписки",
     )
+
+    tariff: Mapped[Tariff] = relationship()

@@ -43,3 +43,6 @@ class Tariff(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         server_default='{}',
         comment="Скидки на тариф",
     )
+
+    def __repr__(self) -> str:
+        return f"{self.name}"

@@ -10,5 +10,8 @@ class PayStatus(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     __tablename__ = "pay_status"
     __table_args__ = (PrimaryKeyConstraint('id', name='pay_statu_pkey'),)
 
-    name: Mapped[str] = Column(String(127), nullable=False, comment="Название платёжной системы")
+    name: Mapped[str] = Column(String(127), nullable=False, comment="Название платежной системы")
     alias: Mapped[str] = Column(String(127), nullable=False, comment="Алиас для обращения в коде")
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
