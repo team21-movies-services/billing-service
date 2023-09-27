@@ -5,7 +5,11 @@ import pytest
 
 @pytest.mark.parametrize(
     ("method", "route", "params", "json", "expected_status"),
-    [("POST", "/api/v1/status", None, None, HTTPStatus.OK), ("GET", "/api/v1/pay-systems", None, None, HTTPStatus.OK)],
+    [
+        ("POST", "/api/v1/status", None, None, HTTPStatus.OK),
+        ("GET", "/api/v1/pay-systems", None, None, HTTPStatus.OK),
+        ("GET", "/api/v1/tariffs", None, None, HTTPStatus.OK),
+    ],
 )
 async def test_status(api_client, method, route, params, expected_status, json):
     """
