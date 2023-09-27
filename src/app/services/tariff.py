@@ -13,6 +13,10 @@ class TariffServiceABC(ABC):
     async def get_by_id(self, tariff_id: UUID) -> TariffResponse:
         raise NotImplementedError
 
+    @abstractmethod
+    async def get_all(self) -> list[TariffResponse]:
+        raise NotImplementedError
+
 
 @dataclass
 class TariffService(TariffServiceABC):
@@ -23,3 +27,7 @@ class TariffService(TariffServiceABC):
         if not tariff:
             raise TariffDoesNotExist
         return TariffResponse.model_validate(tariff)
+
+    async def get_all(self) -> list[TariffResponse]:
+        tariffs = await self._tariff_repository.get_all()
+        return [TariffResponse.model_validate(tariff) for tariff in tariffs]
