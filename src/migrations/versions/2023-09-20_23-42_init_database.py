@@ -118,4 +118,5 @@ def downgrade() -> None:
     op.drop_table('tariffs')
     op.drop_table('pay_systems')
     op.drop_table('pay_status')
+    op.execute("DROP TYPE tariff_period_unit")
     # ### end Alembic commands ###

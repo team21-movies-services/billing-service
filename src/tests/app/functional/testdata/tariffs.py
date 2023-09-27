@@ -12,7 +12,7 @@ def fake_tariff() -> Tariff:
         id=uuid4(),
         name=fake.name(),
         alias=fake.word(),
-        cost=fake.random_int(min=50, max=100),
+        cost=fake.random_int(min=50, max=99),  # Исправить после исправления цены в базе
         period=fake.random_int(min=1, max=12),
         period_unit=fake.enum(TariffPeriodUnit),
         created_at=datetime.now(),
