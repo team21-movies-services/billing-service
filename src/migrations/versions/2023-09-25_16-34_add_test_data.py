@@ -85,6 +85,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.execute(sa.sql.text("DELETE FROM user_subscriptions WHERE user_id IN ('7e3dad93-1401-4c7a-a401-1ee0f33d207e')"))
     op.execute(sa.sql.text("DELETE FROM user_payments WHERE user_id IN ('7e3dad93-1401-4c7a-a401-1ee0f33d207e')"))
     op.execute(sa.sql.text("DELETE FROM tariffs WHERE alias IN ('base')"))
     op.execute(sa.sql.text("DELETE FROM pay_systems WHERE alias IN ('yookassa')"))
