@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 
 from shared.database.models.user_subscription import UserSubscription
-from shared.exceptions.base import UserCurrentSubscriptionNotExist
+from shared.exceptions.not_exist import UserCurrentSubscriptionNotExist
 from sqlalchemy import select
 from sqlalchemy.orm import contains_eager
 

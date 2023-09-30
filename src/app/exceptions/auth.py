@@ -1,7 +1,7 @@
-from .base import AuthException
+from .base import BaseAuthException
 
 
-class TokenException(AuthException):
+class TokenException(BaseAuthException):
     """Base Token Exception"""
 
 
@@ -13,5 +13,5 @@ class TokenDecodeException(TokenException):
     """Token Decode Exception"""
 
 
-class TokenExpiredException(AuthException):
+class TokenExpiredException(BaseAuthException):
     """Token Expired Exception"""

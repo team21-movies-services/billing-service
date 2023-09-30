@@ -4,7 +4,7 @@ from uuid import UUID
 
 import jwt
 
-import app.core.exceptions.auth as auth_exceptions
+import app.exceptions.auth as auth_exceptions
 from app.schemas.domain.auth import AuthData
 
 logger = logging.getLogger(__name__)

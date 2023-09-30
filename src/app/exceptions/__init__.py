@@ -1,2 +1,2 @@
-from .auth import AuthException, TokenException, TokenExpiredException
-from .base import AppException
+from .auth import BaseAuthException, TokenException, TokenExpiredException
+from .base import BaseAppException
