@@ -15,6 +15,7 @@ class BaseExceptionInfo(ExceptionEnum):
     BASE_ERROR = "0000", "Something went wrong ..."
     BASE_AUTH_ERROR = "1000", "Unauthorized"
     BASE_CLIENT_ERROR = "2000", "Something went wrong ..."
+    BASE_FORBIDDEN_ERROR = "3000", "Forbidden!"
 
 
 class BaseAppException(Exception):
@@ -33,11 +34,18 @@ class BaseAuthException(BaseAppException):
     """Base Token Exception"""
 
     code: str = BaseExceptionInfo.BASE_AUTH_ERROR.code
-    error: str = BaseExceptionInfo.BASE_ERROR.error
+    error: str = BaseExceptionInfo.BASE_AUTH_ERROR.error
+
+
+class BaseForbiddenException(BaseAppException):
+    """Base Token Exception"""
+
+    code: str = BaseExceptionInfo.BASE_FORBIDDEN_ERROR.code
+    error: str = BaseExceptionInfo.BASE_FORBIDDEN_ERROR.error
 
 
 class BaseClientException(BaseAppException):
     """Base Client Exception"""
 
     code: str = BaseExceptionInfo.BASE_CLIENT_ERROR.code
-    error: str = BaseExceptionInfo.BASE_ERROR.error
+    error: str = BaseExceptionInfo.BASE_CLIENT_ERROR.error

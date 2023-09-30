@@ -20,7 +20,9 @@ async def application_exception_handler(request: Request, exc: app_exceptions.Ba
     if isinstance(exc, app_exceptions.BaseAuthException):
         status_code = status.HTTP_401_UNAUTHORIZED
     elif isinstance(exc, app_exceptions.BaseClientException):
-        status_code = status.HTTP_401_UNAUTHORIZED
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    elif isinstance(exc, app_exceptions.BaseForbiddenException):
+        status_code = status.HTTP_403_FORBIDDEN
     else:
         status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
