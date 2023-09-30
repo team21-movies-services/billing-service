@@ -5,6 +5,7 @@ Revises: 1e06c683f268
 Create Date: 2023-09-25 16:34:28.576113
 
 """
+from datetime import datetime, timedelta
 from typing import Sequence, Union
 from uuid import UUID, uuid4
 
@@ -66,6 +67,18 @@ def upgrade() -> None:
             ('{uuid4()}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '60', 'subscription'),
             ('{uuid4()}', '{pay_system_id}', '{canceled_id}', '{user_id}', '{str(uuid4())}', '65', 'subscription'),
             ('{uuid4()}', '{pay_system_id}', '{canceled_id}', '{user_id}', '{str(uuid4())}', '70', 'subscription');
+            """
+        )
+    )
+    user_id = UUID("7e3dad93-1401-4c7a-a401-1ee0f33d207e")
+    period_start = datetime.now() - timedelta(days=30)
+    period_end = datetime.now() + timedelta(days=5)
+    op.execute(
+        sa.sql.text(
+            f"""
+            INSERT INTO user_subscriptions (id, tariff_id, user_id, period_start, period_end) VALUES
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start}', '{period_end}'),
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start-timedelta(days=30)}', '{period_end - timedelta(days=30)}');
             """
         )
     )
