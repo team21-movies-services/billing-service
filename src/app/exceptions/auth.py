@@ -1,8 +1,4 @@
-from app.core.exceptions.base import AppException
-
-
-class AuthException(AppException):
-    """Base Token Exception"""
+from .base import AuthException
 
 
 class TokenException(AuthException):

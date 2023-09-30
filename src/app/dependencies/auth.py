@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import APIKeyHeader
 
-from app.core.exceptions.auth import TokenException, TokenExpiredException
+from app.exceptions.auth import TokenException, TokenExpiredException
 from app.schemas.domain.auth import AuthData
 from app.services import AuthServiceABC
 

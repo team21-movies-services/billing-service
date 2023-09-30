@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from uuid import UUID
 
-from shared.exceptions.base import TariffDoesNotExist
+from shared.exceptions.not_exist import TariffDoesNotExist
 
 from app.repositories.tariff import TariffRepositoryABC
 from app.schemas.response.tariff import TariffResponse

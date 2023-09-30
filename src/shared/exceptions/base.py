@@ -1,6 +1,6 @@
-class ObjectDoesNotExist(Exception):
-    """Does not exist Exception"""
+class BaseError(Exception):
+    """Base exception"""
 
 
-class TariffDoesNotExist(ObjectDoesNotExist):
-    """Tariff does not exist Exception"""
+class BaseDoesNotExist(BaseError):
+    """Base does not exist Exception"""
