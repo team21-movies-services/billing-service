@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .config import Settings
+from worker.core.config import Settings
 
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOG_DEFAULT_HANDLERS = ['console']
@@ -21,7 +21,7 @@ class Logger:
             },
             'handlers': {
                 'console': {
-                    'level': self._settings.project.log_level,
+                    'level': self._settings.worker.log_level,
                     'class': 'logging.StreamHandler',
                     'formatter': 'verbose',
                 },
@@ -29,11 +29,11 @@ class Logger:
             'loggers': {
                 '': {
                     'handlers': LOG_DEFAULT_HANDLERS,
-                    'level': self._settings.project.log_level,
+                    'level': self._settings.worker.log_level,
                 },
             },
             'root': {
-                'level': self._settings.project.log_level,
+                'level': self._settings.worker.log_level,
                 'formatter': 'verbose',
                 'handlers': LOG_DEFAULT_HANDLERS,
             },

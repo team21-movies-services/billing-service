@@ -26,7 +26,7 @@ COPY pyproject.toml pyproject.toml
 RUN poetry install --no-root --only scheduler
 
 # Копирования кода приложения
-COPY ./src/scheduler $SRC_DIR/scheduler
+COPY ./src/worker $SRC_DIR/worker
 COPY ./src/shared $SRC_DIR/shared
 
 COPY infra/backend/entrypoint.sh /usr/local/bin/entrypoint.sh

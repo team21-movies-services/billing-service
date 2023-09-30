@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from scheduler.schemas.payment import PaymentSchema
+from worker.schemas.payment import PaymentSchema
 
 
 class BasePaymentProvider(ABC):

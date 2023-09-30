@@ -59,6 +59,8 @@ pytest-asyncio = "^0.21.1"
 sqlalchemy-utils = "^0.41.1"
 pytest-ordering = "^0.6"
 faker = "^19.6.2"
+mimesis = "^11.1.0"
+pytest-randomly = "^3.15.0"
 
 
 [tool.poetry.group.scheduler.dependencies]
@@ -69,6 +71,8 @@ rodi = "^2.0.3"
 httpx = "^0.24.1"
 pydantic = "^2.4.1"
 pydantic-settings = "^2.0.3"
+yookassa = "^2.4.0"
+scheduler = "^0.8.4"
 
 
 [build-system]
