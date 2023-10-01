@@ -40,3 +40,15 @@ async def _user_current_subscription(
     auth_data: AuthData = Depends(get_auth_data),
 ):
     return await subscription_service.get_user_current_subscription(user_id=auth_data.user_id)
+
+
+@router.get(
+    '/cancel',
+    summary="Отмена автопродления подписки",
+    status_code=status.HTTP_200_OK,
+)
+async def _subscription_cancel(
+    subscription_service: SubscriptionServiceABC = Depends(),
+    auth_data: AuthData = Depends(get_auth_data),
+):
+    return await subscription_service.cancel(user_id=auth_data.user_id)
