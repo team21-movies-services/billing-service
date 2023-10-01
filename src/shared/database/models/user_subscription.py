@@ -18,14 +18,14 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
 
     tariff_id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),
-        RestrictForeignKey(Tariff.id),
+        RestrictForeignKey(Tariff.id, name='tariff_fkey'),
         nullable=False,
         comment="ID тарифа",
     )
     user_payment_id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),
-        RestrictForeignKey(UserPayment.id),
-        nullable=False,
+        RestrictForeignKey(UserPayment.id, name='user_payment_fkey'),
+        nullable=True,
         comment="Связь с платежом пользователя",
     )
     user_id: Mapped[uuid.UUID] = Column(
