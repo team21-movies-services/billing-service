@@ -23,4 +23,4 @@ class PaymentStatusService:
                 is_updated = self._payment_repository.set_payment_status(payment)
                 if is_updated:
                     logger.info("Updated payment with id %s to status %s", updated_payment.id, updated_payment.status)
-        logger.info("Payments checked, next check in %s minute(s)", self._settings.worker.pending_payments_check)
+        logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)
