@@ -2,8 +2,8 @@ from rodi import Container
 from worker.clients.database import SQLAlchemyProvider
 from worker.core.config import Settings
 from worker.core.logger import Logger
-from worker.event_handler import EventHandler
 from worker.providers import MockPaymentProvider, YookassaPaymentProvider
+from worker.providers.factory import ProviderFactory
 from worker.repository.payment import UserPaymentsRepository
 from worker.services.payment import PaymentStatusService
 
@@ -29,4 +29,4 @@ app.register(MockPaymentProvider)
 app.register(PaymentStatusService)
 
 # EventHandler
-app.register(EventHandler)
+app.register(ProviderFactory)
