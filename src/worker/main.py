@@ -2,7 +2,7 @@ import logging.config
 from datetime import timedelta
 from time import sleep
 
-from scheduler import Scheduler
+from scheduler.threading.scheduler import Scheduler
 from worker.container import app
 from worker.core.config import Settings
 from worker.core.logger import Logger
