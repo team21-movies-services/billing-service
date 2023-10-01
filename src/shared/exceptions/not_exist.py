@@ -5,6 +5,7 @@ class NotExistsExceptionInfo(ExceptionEnum):
     OBJECT_NOT_EXIST = "3001", "Object does not exists."
     TARIFF_NOT_EXISTS = "3002", "Tariff does not exists."
     USER_SUBSCRIPTION_NOT_EXISTS = "3003", "User doesn't have active subscription"
+    PAY_SYSTEM_NOT_EXISTS = "3004", "Pay system not exists."
 
 
 class ObjectDoesNotExist(BaseDoesNotExist):
@@ -19,6 +20,13 @@ class TariffDoesNotExist(BaseDoesNotExist):
 
     code: str = NotExistsExceptionInfo.TARIFF_NOT_EXISTS.code
     error: str = NotExistsExceptionInfo.TARIFF_NOT_EXISTS.error
+
+
+class PaySystemDoesNotExist(BaseDoesNotExist):
+    """PaySystem does not exist Exception"""
+
+    code: str = NotExistsExceptionInfo.PAY_SYSTEM_NOT_EXISTS.code
+    error: str = NotExistsExceptionInfo.PAY_SYSTEM_NOT_EXISTS.error
 
 
 class UserCurrentSubscriptionNotExist(BaseDoesNotExist):
