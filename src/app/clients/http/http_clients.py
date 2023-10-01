@@ -4,7 +4,7 @@ from typing import Any, Optional
 from httpx import AsyncClient, codes
 
 from app.clients.http.base import AsyncHTTPClientABC
-from app.clients.http.exceptions import ClientErrorException
+from app.exceptions.clients import HTTPClientException
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class AsyncHTTPClient(AsyncHTTPClientABC):
             data=data,
         )
         if response.status_code != codes.OK:
-            raise ClientErrorException(f"Error send post request. detail={response.content!r}")
+            raise HTTPClientException(detail=response.content.decode('utf-8'))
         return response.json()
 
     async def get(

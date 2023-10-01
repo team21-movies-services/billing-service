@@ -7,6 +7,7 @@ from app.api.routers.main import setup_routers
 from app.core.config import Settings
 from app.core.logger import LOGGING
 from app.dependencies.main import setup_dependencies
+from app.exceptions.main import setup_error_handlers
 from app.middleware.main import setup_middleware
 from app.providers.main import setup_providers
 
@@ -27,6 +28,7 @@ def create_app(settings: Settings):
     setup_routers(app)
     setup_dependencies(app)
     setup_middleware(app)
+    setup_error_handlers(app)
     return app
 
 

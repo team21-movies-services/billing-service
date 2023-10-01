@@ -1,10 +1,10 @@
 import logging
 from typing import Optional
 
-from fastapi import Depends, HTTPException, Security, status
+from fastapi import Depends, Security
 from fastapi.security import APIKeyHeader
 
-from app.core.exceptions.auth import TokenException, TokenExpiredException
+from app.exceptions.base import BaseForbiddenException
 from app.schemas.domain.auth import AuthData
 from app.services import AuthServiceABC
 
@@ -18,17 +18,9 @@ async def get_auth_data(
     access_token: Optional[str] = Security(api_key_header),
 ):
     if not access_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise BaseForbiddenException
 
-    try:
-        auth_data: AuthData = await auth_service.validate_access_token(access_token)
-    except TokenException:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-    except TokenExpiredException:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": {"message": "Error validating access token: Session has expired"}},
-        )
+    auth_data: AuthData = await auth_service.validate_access_token(access_token)
     logger.debug(f'User request: user_id - {auth_data.user_id}')
     return auth_data
 
@@ -37,5 +29,5 @@ async def get_auth_admin(
     auth_data: AuthData = Depends(get_auth_data),
 ):
     if not auth_data.is_superuser:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        raise BaseForbiddenException
     return auth_data
