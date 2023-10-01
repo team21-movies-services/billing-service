@@ -4,6 +4,7 @@ from datetime import datetime
 from shared.database.models.base import BaseModel, Column, RestrictForeignKey
 from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 from shared.database.models.tariff import Tariff
+from shared.database.models.user_payment import UserPayment
 from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import Mapped, relationship
@@ -20,6 +21,12 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         RestrictForeignKey(Tariff.id),
         nullable=False,
         comment="ID тарифа",
+    )
+    user_payment_id: Mapped[uuid.UUID] = Column(
+        UUID(as_uuid=True),
+        RestrictForeignKey(UserPayment.id),
+        nullable=False,
+        comment="Связь с платежом пользователя",
     )
     user_id: Mapped[uuid.UUID] = Column(
         UUID(as_uuid=True),
@@ -40,3 +47,4 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
     )
 
     tariff: Mapped[Tariff] = relationship()
+    user_payment: Mapped[UserPayment] = relationship()
