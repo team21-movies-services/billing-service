@@ -6,7 +6,7 @@ class WorkerSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="worker_")
 
     log_level: str = Field(default="DEBUG")
-    pending_payments_check: int = Field(default=1)
+    pending_payments_check: int = Field(default=60)
 
 
 class PostgresSettings(BaseSettings):
