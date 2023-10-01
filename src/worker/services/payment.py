@@ -15,8 +15,8 @@ class PaymentStatusService:
     _settings: Settings
 
     def update_pending_payments(self):
-        payment_gen = self._payment_repository.get_payments_with_status("succeeded", 5)
-        for payment in payment_gen:
+        payments = self._payment_repository.get_payments_with_status("pending", 5)
+        for payment in payments:
             provider = self._provider_factory.get_payment_provider(payment.system)
             updated_payment = provider.get_payment_status(payment)
             if updated_payment:

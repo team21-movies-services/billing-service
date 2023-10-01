@@ -15,7 +15,7 @@ class YookassaPaymentProvider(BasePaymentProvider):
         try:
             # TODO: оставил код для отладки, чтобы не ходить в юкассу, ближе к финалу удалим
             # updated_payment = PaymentSchema(**payment.model_dump())
-            # updated_payment.status = "succeeded"
+            # updated_payment.status = "pending"
             updated_payment = Payment.find_one(str(payment.id))
         except NotFoundError:
             logger.error("Payment with id %s not found", payment.id)
@@ -23,6 +23,6 @@ class YookassaPaymentProvider(BasePaymentProvider):
         if updated_payment.status == payment.status:
             logger.debug("Payment %s have still have status %s", payment.id, payment.status)
             return False
-        logger.debug("Payment %s changed status to %s", payment.id, payment.status)
         payment.status = updated_payment.status
+        logger.debug("Payment %s changed status to %s", payment.id, payment.status)
         return payment
