@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from redis.asyncio import Redis
 
-from app.core.exceptions import AppException
+from app.exceptions import BaseAppException
 from app.providers import BaseProvider
 
 
@@ -23,7 +23,7 @@ class RedisProvider(BaseProvider):
         self.redis_client: Redis = Redis(host=self.host, port=self.port)
 
         if not await self.redis_client.ping():
-            raise AppException()
+            raise BaseAppException()
 
         setattr(self.app.state, "async_redis_client", self.redis_client)
 
