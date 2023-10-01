@@ -7,10 +7,10 @@ from app.repositories.user_subscription import (
     UserSubscriptionRepository,
     UserSubscriptionRepositoryABC,
 )
-from app.uow.base import IUnitOfWork, UnitOfWorkABC
+from app.uow.base import UnitOfWorkABC
 
 
-class ISubscriptionUoW(UnitOfWorkABC, IUnitOfWork):
+class ISubscriptionUoW(UnitOfWorkABC):
     tariff_repository: TariffRepositoryABC
     subscription_repository: UserSubscriptionRepositoryABC
     payment_repository: PaymentRepositoryABC

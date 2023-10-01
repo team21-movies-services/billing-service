@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class SubscriptionServiceABC(ABC):
     @abstractmethod
-    async def buy(self, pay_system: str, user_id: UUID, tariff_id: UUID):
+    async def buy(self, pay_system_alias: str, user_id: UUID, tariff_id: UUID):
         raise NotImplementedError
 
     @abstractmethod

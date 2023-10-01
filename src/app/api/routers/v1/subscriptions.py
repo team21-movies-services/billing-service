@@ -24,7 +24,7 @@ async def _subscription_buy(
     auth_data: AuthData = Depends(get_auth_data),
 ):
     return await subscription_service.buy(
-        pay_system=pay_system,
+        pay_system_alias=pay_system,
         user_id=auth_data.user_id,
         tariff_id=subscription_request.tariff_id,
     )
