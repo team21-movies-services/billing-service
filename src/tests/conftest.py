@@ -13,6 +13,7 @@ pytest_plugins = (
     "tests.app.functional.plugins.api_client",
     "tests.app.functional.plugins.auth_user",
     "tests.app.functional.plugins.create_data",
+    "tests.testdata.user_payments",
 )
 
 

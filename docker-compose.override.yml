@@ -20,6 +20,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     healthcheck:
       test:
         [
@@ -76,6 +78,22 @@ services:
     env_file:
       - ./src/.env
     command: poetry run alembic upgrade head
+
+  billing-service-scheduler:
+    env_file:
+      - ./src/.env
+    container_name: billing-service-scheduler
+    environment:
+      PYTHONPATH: /opt
+    build:
+      context: .
+      dockerfile: infra/scheduler/Dockerfile
+    networks:
+      - billing-service-network
+    depends_on:
+      billing-service-postgres:
+        condition: service_healthy
+    command: poetry run python worker/main.py
 
 networks:
   billing-service-network:
