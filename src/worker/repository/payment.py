@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 class UserPaymentsRepository:
     _provider: SQLAlchemyProvider
 
-    def get_payments_with_status(self, status: str):
-        current_time = datetime.utcnow() + timedelta(minutes=1)
+    def get_payments_with_status(self, status: str, delay_minutes):
+        target_time = datetime.utcnow() + timedelta(minutes=delay_minutes)
 
         with self._provider.get_session() as session:
             payments = (
@@ -24,7 +24,7 @@ class UserPaymentsRepository:
                 .join(PayStatus)
                 .join(PaySystem)
                 .filter(PayStatus.alias == status)
-                .filter(UserPayment.created_at <= current_time)
+                .filter(UserPayment.created_at <= target_time)
                 .options(joinedload(UserPayment.pay_status), joinedload(UserPayment.pay_system))
                 .all()
             )
