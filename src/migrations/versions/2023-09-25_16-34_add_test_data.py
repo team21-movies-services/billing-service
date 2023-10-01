@@ -5,6 +5,7 @@ Revises: 1e06c683f268
 Create Date: 2023-09-25 16:34:28.576113
 
 """
+from datetime import datetime, timedelta
 from typing import Sequence, Union
 from uuid import UUID, uuid4
 
@@ -69,9 +70,22 @@ def upgrade() -> None:
             """
         )
     )
+    user_id = UUID("7e3dad93-1401-4c7a-a401-1ee0f33d207e")
+    period_start = datetime.now() - timedelta(days=30)
+    period_end = datetime.now() + timedelta(days=5)
+    op.execute(
+        sa.sql.text(
+            f"""
+            INSERT INTO user_subscriptions (id, tariff_id, user_id, period_start, period_end) VALUES
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start}', '{period_end}'),
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start-timedelta(days=30)}', '{period_end - timedelta(days=30)}');
+            """
+        )
+    )
 
 
 def downgrade() -> None:
+    op.execute(sa.sql.text("DELETE FROM user_subscriptions WHERE user_id IN ('7e3dad93-1401-4c7a-a401-1ee0f33d207e')"))
     op.execute(sa.sql.text("DELETE FROM user_payments WHERE user_id IN ('7e3dad93-1401-4c7a-a401-1ee0f33d207e')"))
     op.execute(sa.sql.text("DELETE FROM tariffs WHERE alias IN ('base')"))
     op.execute(sa.sql.text("DELETE FROM pay_systems WHERE alias IN ('yookassa')"))
