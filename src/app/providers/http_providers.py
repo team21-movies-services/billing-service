@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import FastAPI
 from httpx import AsyncClient
 
@@ -12,11 +10,10 @@ class HTTPXClientProvider(BaseProvider):
         app: FastAPI,
     ):
         self.app = app
-        self.http_client: Optional[AsyncClient] = None
+        self.http_client = AsyncClient()
 
     async def startup(self):
         """FastAPI startup event"""
-        self.http_client = AsyncClient()
         setattr(self.app.state, "async_http_client", self.http_client)
 
     async def shutdown(self):
