@@ -19,3 +19,10 @@ logger = logging.getLogger().getChild('status-router')
 async def _get_api_status(role_service: StatusServiceABC = Depends()) -> StatusResponse:
     logger.debug('Get api status')
     return await role_service.get_api_status()
+
+
+@router.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0
+
+    return division_by_zero
