@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 def setup_middleware(app: FastAPI):
     app.add_middleware(
         CORSMiddleware,
-        allow_origin_regex='.*',
-        allow_credentials=True,
+        allow_origins=["*"],
         allow_methods=["*"],
         allow_headers=["*"],
+        allow_credentials=True,
     )
 
     app.add_middleware(RequestIdHeaderMiddleware)

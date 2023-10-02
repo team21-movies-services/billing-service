@@ -29,7 +29,7 @@ async def _subscription_buy(
         user_id=auth_data.user_id,
         tariff_id=subscription_request.tariff_id,
     )
-    return RedirectResponse(redirect_url)
+    return RedirectResponse(redirect_url, status_code=302)
 
 
 @router.get(

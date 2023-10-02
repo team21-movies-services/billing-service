@@ -82,7 +82,7 @@ class SubscriptionService(SubscriptionServiceABC):
                 # FIXME: error 500
                 raise Exception
 
-            logger.debug(f"payment_response redirect_url {payment_response.redirect_url}")
+            logger.info(f"\n\nPayment Response: Redirect url='{payment_response.redirect_url}'\n\n")
 
             upd_status = await self._subscription_uow.payment_status_repository.get_by_alias("waiting_for_capture")
             if not upd_status:
