@@ -9,7 +9,7 @@ from app.schemas.domain.auth import AuthData
 
 @pytest_asyncio.fixture(name='auth_user', scope='session')
 async def auth_user_fixture():
-    yield AuthData(user_id=uuid4(), is_superuser=False)
+    yield AuthData(user_id=uuid4(), is_superuser=False, roles=["subscriber"])
 
 
 @pytest_asyncio.fixture(name='access_token', scope='function')
