@@ -7,6 +7,7 @@ from app.providers.admin_provider import AdminProvider
 from app.providers.cache_providers import RedisProvider
 from app.providers.http_providers import HTTPXClientProvider
 from app.providers.pg_providers import SQLAlchemyProvider
+from app.providers.sentry_provider import SentryProvider
 
 logger = logging.getLogger(__name__)
 
@@ -39,3 +40,8 @@ def setup_providers(app: FastAPI, settings: Settings):
     )
     admin_provider.register_events()
     logger.info("Setup Admin Provider.")
+
+    if settings.sentry.enable:
+        sentry_provider = SentryProvider(app=app, dsn=settings.sentry.dsn)
+        sentry_provider.register_events()
+        logger.info("Setup Sentry Provider.")
