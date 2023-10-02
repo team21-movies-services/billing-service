@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, status
 from app.dependencies.auth import get_auth_data
 from app.schemas.domain.auth import AuthData
 from app.schemas.request.subscriptions import SubscriptionRequest
+from app.schemas.response.subscriptions import UserSubscriptionResponse
 from app.services.subscription import SubscriptionServiceABC
 
 router = APIRouter(prefix='/subscriptions', tags=['Subscriptions'])
@@ -34,6 +35,7 @@ async def _subscription_buy(
     '/profile',
     summary="Текущая подписка пользователя",
     status_code=status.HTTP_200_OK,
+    response_model=UserSubscriptionResponse,
 )
 async def _user_current_subscription(
     subscription_service: SubscriptionServiceABC = Depends(),
@@ -42,7 +44,7 @@ async def _user_current_subscription(
     return await subscription_service.get_user_current_subscription(user_id=auth_data.user_id)
 
 
-@router.get(
+@router.post(
     '/cancel',
     summary="Отмена автопродления подписки",
     status_code=status.HTTP_200_OK,

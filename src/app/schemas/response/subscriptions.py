@@ -11,3 +11,4 @@ class UserSubscriptionResponse(BaseModelResponse):
     user_id: UUID
     period_start: datetime
     period_end: datetime
+    renew: bool
