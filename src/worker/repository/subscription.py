@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
+from shared.providers.payments.factory import ProviderFactory
 from worker.clients.database.pg_client import SQLAlchemyProvider
-from worker.providers.factory import ProviderFactory
 from worker.schemas.subscription import SubscriptionSchema
 
 

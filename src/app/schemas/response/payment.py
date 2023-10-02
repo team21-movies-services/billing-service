@@ -13,5 +13,11 @@ class UserPaymentResponse(BaseModelResponse):
     pay_status: str
     purpose: str
     payment_id: str
-    json_sale: dict
+    json_detail: dict
     created_at: datetime
+
+
+class PaymentSchema(BaseModelResponse):
+    id: UUID
+    status: str
+    system: str

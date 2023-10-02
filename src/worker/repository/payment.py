@@ -4,10 +4,10 @@ from datetime import datetime, timedelta
 
 from shared.database.models import PayStatus, PaySystem
 from shared.database.models.user_payment import UserPayment
+from shared.schemas.payment import PaymentSchema
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from worker.clients.database.pg_client import SQLAlchemyProvider
-from worker.schemas.payment import PaymentSchema
 
 logger = logging.getLogger(__name__)
 

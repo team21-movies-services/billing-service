@@ -3,7 +3,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class PaymentSchema(BaseModel):
+class PaymentStatus(BaseModel):
     id: UUID
-    status: str
-    system: str
+    name: str
+    alias: str

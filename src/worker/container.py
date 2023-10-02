@@ -1,9 +1,10 @@
 from rodi import Container
+from shared.providers.payments.factory import ProviderFactory
+from shared.providers.payments.mock_provider import MockPaymentProvider
+from src.shared.providers.payments.yookassa_provider import YookassaPaymentProvider
 from worker.clients.database import SQLAlchemyProvider
 from worker.core.config import Settings
 from worker.core.logger import Logger
-from worker.providers import MockPaymentProvider, YookassaPaymentProvider
-from worker.providers.factory import ProviderFactory
 from worker.repository.payment import UserPaymentsRepository
 from worker.services.payment import PaymentStatusService
 

@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from app.repositories.pay_system import PaySystemRepository, PaySystemRepositoryABC
 from app.repositories.payment import PaymentRepository, PaymentRepositoryABC
+from app.repositories.payment_status import (
+    PaymentStatusRepository,
+    PaymentStatusRepositoryABC,
+)
 from app.repositories.tariff import TariffRepository, TariffRepositoryABC
 from app.repositories.user_subscription import (
     UserSubscriptionRepository,
@@ -16,6 +20,8 @@ class ISubscriptionUoW(UnitOfWorkABC):
     payment_repository: PaymentRepositoryABC
     pay_system_repository: PaySystemRepositoryABC
 
+    payment_status_repository: PaymentStatusRepositoryABC
+
 
 class SubscriptionUoW(ISubscriptionUoW):
     def __init__(self, session_factory):
@@ -27,6 +33,7 @@ class SubscriptionUoW(ISubscriptionUoW):
         self.tariff_repository = TariffRepository(self.session)
         self.subscription_repository = UserSubscriptionRepository(self.session)
         self.payment_repository = PaymentRepository(self.session)
+        self.payment_status_repository = PaymentStatusRepository(self.session)
         self.pay_system_repository = PaySystemRepository(self.session)
 
         return self
