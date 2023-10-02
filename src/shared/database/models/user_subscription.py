@@ -5,7 +5,7 @@ from shared.database.models.base import BaseModel, Column, RestrictForeignKey
 from shared.database.models.mixins import IdMixin, TsMixinCreated, TsMixinUpdated
 from shared.database.models.tariff import Tariff
 from shared.database.models.user_payment import UserPayment
-from sqlalchemy import PrimaryKeyConstraint
+from sqlalchemy import BOOLEAN, INTEGER, PrimaryKeyConstraint
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import Mapped, relationship
 
@@ -44,6 +44,27 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         default=datetime.utcnow,
         nullable=False,
         comment="Дата и время окончания действия подписки",
+    )
+    is_disabled: Mapped[bool] = Column(
+        BOOLEAN,
+        default=False,
+        server_default="false",
+        nullable=False,
+        comment="Деактивирует подписку",
+    )
+    renew: Mapped[bool] = Column(
+        BOOLEAN,
+        default=False,
+        server_default="false",
+        nullable=False,
+        comment="Вкл/Выкл автопродление подписки",
+    )
+    renew_try_count: Mapped[int] = Column(
+        INTEGER,
+        default=0,
+        server_default="0",
+        nullable=False,
+        comment="Количество совершённых попыток автопродления платежа",
     )
 
     tariff: Mapped[Tariff] = relationship()

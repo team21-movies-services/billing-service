@@ -19,6 +19,10 @@ class SubscriptionServiceABC(ABC):
     async def get_user_current_subscription(self, user_id: UUID) -> UserSubscriptionResponse:
         raise NotImplementedError
 
+    @abstractmethod
+    async def cancel(self, user_id: UUID) -> None:
+        raise NotImplementedError
+
 
 @dataclass
 class SubscriptionService(SubscriptionServiceABC):
@@ -32,3 +36,6 @@ class SubscriptionService(SubscriptionServiceABC):
 
     async def get_user_current_subscription(self, user_id: UUID) -> UserSubscriptionResponse:
         return await self._user_subscriptions_repository.get_user_current_subscription(user_id)
+
+    async def cancel(self, user_id: UUID) -> None:
+        return await self._user_subscriptions_repository.cancel_renew_by_user_id(user_id)
