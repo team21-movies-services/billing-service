@@ -49,3 +49,4 @@ RUN poetry install --no-root
 COPY ./src/tests $SRC_DIR/tests
 COPY ./src/migrations $SRC_DIR/migrations
 COPY ./src/alembic.ini $SRC_DIR/
+COPY ./src/worker $SRC_DIR/worker
