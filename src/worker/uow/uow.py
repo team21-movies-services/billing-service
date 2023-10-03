@@ -30,27 +30,24 @@ class UnitOfWorkABC(ABC):
 
 
 class SqlAlchemyUoW(UnitOfWorkABC):
+    _session: Session
+
     def __init__(self, pg_client: DbClientABC):
-        super().__init__()
         self.session_factory = pg_client
-        self.session: Session | None = None
 
     def __enter__(self):
-        self.session = self.session_factory.get_session()
-        self.payment_repo = UserPaymentsRepository(self.session)
-        self.subscription_repo = SubscriptionRepository(self.session)
+        self._session = self.session_factory.get_session()
+        self.payment_repo = UserPaymentsRepository(self._session)
+        self.subscription_repo = SubscriptionRepository(self._session)
 
     def __exit__(self, exc_type, exc_value, tb):
         if exc_type is not None:
             traceback.print_exception(exc_type, exc_value, tb)
-        if self.session:
-            self.session.rollback()
-            self.session.close()
+        self._session.rollback()
+        self._session.close()
 
     def commit(self):
-        if self.session:
-            self.session.commit()
+        self._session.commit()
 
     def rollback(self):
-        if self.session:
-            self.session.rollback()
+        self._session.rollback()
