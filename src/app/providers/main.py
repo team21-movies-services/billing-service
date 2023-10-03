@@ -8,6 +8,7 @@ from app.providers.cache_providers import RedisProvider
 from app.providers.http_providers import HTTPXClientProvider
 from app.providers.pg_providers import SQLAlchemyProvider
 from app.providers.sentry_provider import SentryProvider
+from app.services.auth import AuthService
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,8 @@ def setup_providers(app: FastAPI, settings: Settings):
         app=app,
         settings=settings.admin,
         session_maker=sa_provider.async_session_maker,
+        auth_service=AuthService(settings.project.jwt_secret_key),
+        httpx_client=http_client.http_client,
     )
     admin_provider.register_events()
     logger.info("Setup Admin Provider.")

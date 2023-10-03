@@ -1,14 +1,13 @@
-from contextlib import contextmanager
-from typing import Generator
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from worker.core.config import Settings
 
-__all__ = ["SQLAlchemyProvider"]
+from . import DbClientABC
+
+__all__ = ["SQLAlchemyDbClient"]
 
 
-class SQLAlchemyProvider:
+class SQLAlchemyDbClient(DbClientABC):
     def __init__(
         self,
         settings: Settings,
@@ -29,14 +28,5 @@ class SQLAlchemyProvider:
             autoflush=False,
         )
 
-    @contextmanager
-    def get_session(self) -> Generator[Session, None, None]:
-        session: Session = self.session_maker()
-        try:
-            yield session
-            session.commit()
-        except Exception:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+    def get_session(self) -> Session:
+        return self.session_maker()

@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+__all__ = ["SubscriptionSchema"]
+
 
 class SubscriptionSchema(BaseModel):
     id: UUID

@@ -1,10 +1,11 @@
 import logging
 
 from worker.core.config import Settings
-from worker.providers.base_provider import BasePaymentProvider
-from worker.schemas.payment import PaymentSchema
+from worker.schemas import PaymentSchema
 from yookassa import Configuration, Payment
 from yookassa.client import NotFoundError
+
+from .base_provider import BasePaymentProvider
 
 logger = logging.getLogger(__name__)
 
