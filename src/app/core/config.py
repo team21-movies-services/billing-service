@@ -42,11 +42,18 @@ class AdminConfig(BaseSettings):
     debug: bool = Field(default=False)
 
 
+# Настройки Sentry
+class SentryConfig(BaseSettings):
+    dsn: str = Field(default="dsn", alias='SENTRY_DSN')
+    enable: bool = Field(default=True, alias='SENTRY_ENABLE')
+
+
 class Settings(BaseSettings):
     project: ProjectConfig = ProjectConfig()
     redis: RedisConfig = RedisConfig()
     postgres: PostgresConfig = PostgresConfig()
     admin: AdminConfig = AdminConfig()
+    sentry: SentryConfig = SentryConfig()
 
 
 settings = Settings()

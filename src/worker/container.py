@@ -8,6 +8,7 @@ from worker.providers import (
     YookassaPaymentProvider,
 )
 from worker.services import PaymentStatusService
+from worker.services.sentry import SentryService
 from worker.uow import SqlAlchemyUoW, UnitOfWorkABC
 
 app = Container()
@@ -28,6 +29,7 @@ app.register(MockPaymentProvider)
 
 # Services
 app.register(PaymentStatusService)
+app.register(SentryService)
 
 # EventHandler
 app.register(ProviderFactory)

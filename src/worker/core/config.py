@@ -31,7 +31,13 @@ class YookassaConfig(BaseSettings):
     shop_id: str = Field(default="")
 
 
+class SentryConfig(BaseSettings):
+    dsn: str = Field(default="dsn", alias='SENTRY_DSN')
+    enable: bool = Field(default=True, alias='SENTRY_ENABLE')
+
+
 class Settings(BaseSettings):
     worker: WorkerSettings = WorkerSettings()
     postgres: PostgresSettings = PostgresSettings()
     yookassa: YookassaConfig = YookassaConfig()
+    sentry: SentryConfig = SentryConfig()
