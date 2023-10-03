@@ -18,5 +18,6 @@ class SubscriptionService:
         with self._uow:
             subs = self._uow.subscription_repo.disable()
             self._uow.commit()
+            # TODO: отпарвка события о деактивации подписки
             logger.info("Subscriptions with ids %s disabled.", ", ".join(str(sub.id) for sub in subs))
         logger.info("Subscriptions disable task complete")
