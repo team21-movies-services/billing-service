@@ -1,8 +1,9 @@
 import logging
 from dataclasses import dataclass
 
-from worker.providers import BasePaymentProvider, YookassaPaymentProvider
-from worker.providers.mock_provider import MockPaymentProvider
+from .base_provider import BasePaymentProvider
+from .mock_provider import MockPaymentProvider
+from .yookassa import YookassaPaymentProvider
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ from time import sleep
 from scheduler.threading.scheduler import Scheduler
 from worker.container import app, settings
 from worker.core.logger import Logger
-from worker.services.payment import PaymentStatusService
+from worker.services import PaymentStatusService
 
 logging.config.dictConfig(app.resolve(Logger).get_settings())
 logger = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 import logging
 
-from worker.schemas.payment import PaymentSchema
+from worker.schemas import PaymentSchema
 
 from .base_provider import BasePaymentProvider
 
