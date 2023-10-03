@@ -17,10 +17,12 @@ class SubscriptionRepository:
     def disable(self) -> list[SubscriptionSchema]:
         query = (
             update(UserSubscription)
-            .where(UserSubscription.period_end < datetime.utcnow())
-            .where(or_(not_(UserSubscription.renew), UserSubscription.renew_try_count > 3))
+            .where(UserSubscription.period_end < datetime.utcnow(), not_(UserSubscription.is_disabled))
+            .where(or_(not_(UserSubscription.renew), UserSubscription.renew_try_count >= 3))
             .values(is_disabled=True)
             .returning(UserSubscription)
         )
         results = self._session.execute(query)
-        return [SubscriptionSchema.model_validate(result) for result in results.scalars().all()]
+        db_objs = results.scalars().all()
+
+        return [SubscriptionSchema.model_validate(db_obj) for db_obj in db_objs]

@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -7,7 +9,10 @@ class WorkerSettings(BaseSettings):
 
     log_level: str = Field(default="DEBUG")
     pending_payments_check: int = Field(default=60)
-    disable_subscriptions: int = Field(default=60)
+    disable_subs_h: int = Field(default=19)
+    disable_subs_m: int = Field(default=14)
+
+    tz: timezone = Field(default=timezone.utc)
 
 
 class PostgresSettings(BaseSettings):

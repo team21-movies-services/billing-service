@@ -16,11 +16,7 @@ class SubscriptionService:
 
     def disable(self):
         with self._uow:
-            subscriptions = self._uow.subscription_repo.disable()
+            subs = self._uow.subscription_repo.disable()
             self._uow.commit()
-            logger.info(
-                "Disabled %s subscriptions: %s",
-                len(subscriptions),
-                [subscription.id for subscription in subscriptions],
-            )
-        logger.info("Subscriptions disabled, next disable in %s second(s)", self._settings.worker.disable_subscriptions)
+            logger.info("Subscriptions with ids %s disabled.", ", ".join(str(sub.id) for sub in subs))
+        logger.info("Subscriptions disable task complete")

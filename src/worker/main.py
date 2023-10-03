@@ -1,5 +1,5 @@
 import logging.config
-from datetime import timedelta
+from datetime import time, timedelta
 from time import sleep
 
 from scheduler.threading.scheduler import Scheduler
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 PENDING_PAYMENTS_CHECK_INTERVAL = timedelta(seconds=settings.worker.pending_payments_check)
-DISABLE_SUBSCRIPTIONS_INTERVAL = timedelta(seconds=10)
+DISABLE_SUBSCRIPTIONS_INTERVAL = time(hour=settings.worker.disable_subs_h, minute=settings.worker.disable_subs_m)
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
     scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, payment_service.update_pending_payments)
 
     subscription_service = app.resolve(SubscriptionService)
-    scheduler.cyclic(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.disable)
+    scheduler.daily(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.disable, alias="Subscriptions disable")
 
     while True:
         scheduler.exec_jobs()
