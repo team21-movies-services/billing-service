@@ -1,6 +1,5 @@
 import traceback
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 from worker.clients import DbClientABC
@@ -31,19 +30,16 @@ class UnitOfWorkABC(ABC):
         raise NotImplementedError
 
 
-@dataclass
 class SqlAlchemyUoW(UnitOfWorkABC):
     def __init__(self, pg_client: DbClientABC):
+        super().__init__()
         self.session_factory = pg_client
         self.session: Session | None = None
-        self.payment_repo: UserPaymentsRepository | None = None
-        self.subscription_repo: SubscriptionRepository | None = None
 
     def __enter__(self):
-        with self.session_factory.get_session() as session:
-            self.session = session
-            self.payment_repo = UserPaymentsRepository(session)
-            self.subscription_repo = SubscriptionRepository(session)
+        self.session = self.session_factory.get_session()
+        self.payment_repo = UserPaymentsRepository(self.session)
+        self.subscription_repo = SubscriptionRepository(self.session)
 
     def __exit__(self, exc_type, exc_value, tb):
         if exc_type is not None:

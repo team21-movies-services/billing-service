@@ -20,13 +20,14 @@ class PaymentStatusService:
             for payment in payments:
                 provider = self._provider_factory.get_payment_provider(payment.system)
                 updated_payment = provider.get_payment_status(payment)
-                if updated_payment:
-                    is_updated = self._uow.payment_repo.set_payment_status(payment)
-                    if is_updated:
-                        logger.info(
-                            "Updated payment with id %s to status %s",
-                            updated_payment.id,
-                            updated_payment.status,
-                        )
-            logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)
+                if not updated_payment:
+                    continue
+                is_updated = self._uow.payment_repo.set_payment_status(payment)
+                if is_updated:
+                    logger.info(
+                        "Updated payment with id %s to status %s",
+                        updated_payment.id,
+                        updated_payment.status,
+                    )
             self._uow.commit()
+            logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)

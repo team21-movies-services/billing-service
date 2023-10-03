@@ -1,6 +1,3 @@
-from contextlib import contextmanager
-from typing import Generator
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from worker.core.config import Settings
@@ -31,7 +28,5 @@ class SQLAlchemyDbClient(DbClientABC):
             autoflush=False,
         )
 
-    @contextmanager
-    def get_session(self) -> Generator[Session, None, None]:
-        with self.session_maker() as session:
-            yield session
+    def get_session(self) -> Session:
+        return self.session_maker()
