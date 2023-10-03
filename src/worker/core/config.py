@@ -7,6 +7,7 @@ class WorkerSettings(BaseSettings):
 
     log_level: str = Field(default="DEBUG")
     pending_payments_check: int = Field(default=60)
+    disable_subscriptions: int = Field(default=60)
 
 
 class PostgresSettings(BaseSettings):

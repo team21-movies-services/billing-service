@@ -9,9 +9,8 @@ __all__ = ["UnitOfWorkABC", "SqlAlchemyUoW"]
 
 
 class UnitOfWorkABC(ABC):
-    def __init__(self):
-        self.payment_repo: UserPaymentsRepository | None = None
-        self.subscription_repo: SubscriptionRepository | None = None
+    payment_repo: UserPaymentsRepository
+    subscription_repo: SubscriptionRepository
 
     @abstractmethod
     def __enter__(self):
