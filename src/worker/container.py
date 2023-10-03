@@ -2,18 +2,14 @@ from rodi import Container
 from worker.clients import DbClientABC, SQLAlchemyDbClient
 from worker.core.config import Settings
 from worker.core.logger import Logger
-from worker.providers import MockPaymentProvider, YookassaPaymentProvider
-from worker.providers.factory import ProviderFactory
-from worker.repository.payment import UserPaymentsRepository
-from worker.services.payment import PaymentStatusService
-from worker.services.sentry import SentryService
 from worker.providers import (
     MockPaymentProvider,
     ProviderFactory,
     YookassaPaymentProvider,
 )
-from worker.uow import SqlAlchemyUoW, UnitOfWorkABC
 from worker.services import PaymentStatusService
+from worker.services.sentry import SentryService
+from worker.uow import SqlAlchemyUoW, UnitOfWorkABC
 
 app = Container()
 settings = Settings()
