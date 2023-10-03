@@ -6,3 +6,4 @@ from pydantic import BaseModel
 class AuthData(BaseModel):
     user_id: UUID
     is_superuser: bool
+    roles: list[str]
