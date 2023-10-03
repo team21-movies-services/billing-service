@@ -18,7 +18,7 @@ DISABLE_SUBSCRIPTIONS_INTERVAL = timedelta(seconds=10)
 def main():
     scheduler = Scheduler()
     payment_service: PaymentStatusService = app.resolve(PaymentStatusService)
-    sentry_service: SentryService = app.resolve(SentryService)
+    sentry_service = app.resolve(SentryService)
     sentry_service.start_sentry()
     scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, payment_service.update_pending_payments)
 
