@@ -14,7 +14,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '04e65071a096'
-down_revision: Union[str, None] = '1e06c683f268'
+down_revision: Union[str, None] = 'cd9807ed90b2'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -58,12 +58,14 @@ def upgrade() -> None:
         )
     )
     user_id = UUID("7e3dad93-1401-4c7a-a401-1ee0f33d207e")
+    payment_id_1 = uuid4()
+    payment_id_2 = uuid4()
     op.execute(
         sa.sql.text(
             f"""
             INSERT INTO user_payments (id, pay_system_id, pay_status_id, user_id, payment_id, amount, purpose) VALUES
-            ('{uuid4()}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '50', 'subscription'),
-            ('{uuid4()}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '55', 'subscription'),
+            ('{payment_id_1}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '50', 'subscription'),
+            ('{payment_id_2}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '55', 'subscription'),
             ('{uuid4()}', '{pay_system_id}', '{succeeded_id}', '{user_id}', '{str(uuid4())}', '60', 'subscription'),
             ('{uuid4()}', '{pay_system_id}', '{canceled_id}', '{user_id}', '{str(uuid4())}', '65', 'subscription'),
             ('{uuid4()}', '{pay_system_id}', '{canceled_id}', '{user_id}', '{str(uuid4())}', '70', 'subscription');
@@ -76,9 +78,9 @@ def upgrade() -> None:
     op.execute(
         sa.sql.text(
             f"""
-            INSERT INTO user_subscriptions (id, tariff_id, user_id, period_start, period_end) VALUES
-            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start}', '{period_end}'),
-            ('{uuid4()}', '{tariff_id}', '{user_id}', '{period_start-timedelta(days=30)}', '{period_end - timedelta(days=30)}');
+            INSERT INTO user_subscriptions (id, tariff_id, user_id, user_payment_id, period_start, period_end) VALUES
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{payment_id_1}', '{period_start}', '{period_end}'),
+            ('{uuid4()}', '{tariff_id}', '{user_id}', '{payment_id_2}', '{period_start-timedelta(days=30)}', '{period_end - timedelta(days=30)}');
             """
         )
     )
