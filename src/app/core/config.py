@@ -37,6 +37,8 @@ class PostgresConfig(BaseSettings):
 class AdminConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="ADMIN_")
 
+    login_url: str = Field(default="https://9c838776-e431-476a-81a9-7a6e4ac16878.mock.pstmn.io/login")
+    secret_key: str = Field(default="super_secret_key")
     debug: bool = Field(default=False)
 
 
