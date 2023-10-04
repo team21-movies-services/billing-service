@@ -39,7 +39,7 @@ class YookassaConfig(BaseSettings):
 
 class SentryConfig(BaseSettings):
     dsn: str = Field(default="dsn", alias='SENTRY_DSN')
-    enable: bool = Field(default=True, alias='SENTRY_ENABLE')
+    enable: bool = Field(default=False, alias='SENTRY_ENABLE')
 
 
 class Settings(BaseSettings):
