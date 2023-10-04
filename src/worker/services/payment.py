@@ -1,6 +1,8 @@
 import logging
 from dataclasses import dataclass
 
+from shared.database.dto import UserPaymentDTO
+from shared.exceptions.payments import PaymentExternalApiException
 from worker.core.config import Settings
 from worker.providers import ProviderFactory
 from worker.uow import UnitOfWorkABC
@@ -14,20 +16,24 @@ class PaymentStatusService:
     _settings: Settings
     _uow: UnitOfWorkABC
 
-    def update_pending_payments(self):
+    def update_pending_payments(self, delay: int = 5):
         with self._uow:
-            payments = self._uow.payment_repo.get_payments_with_status("pending", 5)
+            payments = self._uow.payment_repo.get_payments_with_status("pending", delay)
             for payment in payments:
-                provider = self._provider_factory.get_payment_provider(payment.system)
-                updated_payment = provider.get_payment_status(payment)
-                if not updated_payment:
+                new_status = self._request_new_payment_status(payment)
+                if new_status == payment.pay_status.alias:
                     continue
-                is_updated = self._uow.payment_repo.set_payment_status(payment)
-                if is_updated:
-                    logger.info(
-                        "Updated payment with id %s to status %s",
-                        updated_payment.id,
-                        updated_payment.status,
-                    )
+                is_updated = self._uow.payment_repo.set_payment_status(payment.id, new_status)
+                if not is_updated:
+                    logger.warning("Failed to update payment status for payment ID %s", payment.id)
             self._uow.commit()
             logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)
+
+    def _request_new_payment_status(self, payment: UserPaymentDTO) -> str:
+        provider = self._provider_factory.get_payment_provider(payment.pay_system.alias)
+        try:
+            new_status = provider.get_payment_status(payment)
+        except PaymentExternalApiException:
+            new_status = "failed"
+            logger.warning("Setting status %s to payment %s due to external api error", new_status, payment.id)
+        return new_status
