@@ -1,23 +1,23 @@
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
-class AsyncHTTPClientABC(ABC):
+class BaseHttpClient(ABC):
     @abstractmethod
-    async def get(
+    def get(
         self,
         path: str,
-        params: Optional[dict] = None,
-        headers: Optional[dict] = None,
+        params: dict | None = None,
+        headers: dict | None = None,
     ) -> Any:
         raise NotImplementedError
 
     @abstractmethod
-    async def post(
+    def post(
         self,
         path: str,
-        headers: Optional[dict] = None,
-        data: Optional[dict] = None,
-        params: Optional[dict] = None,
+        headers: dict | None = None,
+        data: dict | None = None,
+        params: dict | None = None,
     ) -> Any:
         raise NotImplementedError

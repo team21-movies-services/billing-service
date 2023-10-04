@@ -1,27 +1,28 @@
 import logging
-from typing import Any, Optional
+from typing import Any
 
-from httpx import AsyncClient, codes
+import httpx
+from httpx import codes
+from shared.exceptions.clients import HTTPClientException
 
-from app.clients.http.base import AsyncHTTPClientABC
-from app.exceptions.clients import HTTPClientException
+from .base import BaseHttpClient
 
 logger = logging.getLogger(__name__)
 
 
-class AsyncHTTPClient(AsyncHTTPClientABC):
-    def __init__(self, httpx_client: AsyncClient):
+class HttpxHttpClient(BaseHttpClient):
+    def __init__(self, httpx_client: httpx.Client):
         self.httpx_client = httpx_client
 
-    async def _request(
+    def _request(
         self,
         method: str,
         url: str,
-        headers: Optional[dict] = None,
-        params: Optional[dict] = None,
-        data: Optional[dict] = None,
+        headers: dict | None = None,
+        params: dict | None = None,
+        data: dict | None = None,
     ) -> Any:
-        response = await self.httpx_client.request(
+        response = self.httpx_client.request(
             method,
             url,
             headers=headers,
@@ -29,30 +30,30 @@ class AsyncHTTPClient(AsyncHTTPClientABC):
             data=data,
         )
         if response.status_code != codes.OK:
-            raise HTTPClientException(detail=response.content.decode('utf-8'))
+            raise HTTPClientException(f"Error sending request. detail={response.content!r}")
         return response.json()
 
-    async def get(
+    def get(
         self,
         path: str,
-        params: Optional[dict] = None,
-        headers: Optional[dict] = None,
+        params: dict | None = None,
+        headers: dict | None = None,
     ) -> Any:
-        return await self._request(
+        return self._request(
             method="GET",
             url=path,
             headers=headers,
             params=params,
         )
 
-    async def post(
+    def post(
         self,
         path: str,
-        headers: Optional[dict] = None,
-        data: Optional[dict] = None,
-        params: Optional[dict] = None,
+        headers: dict | None = None,
+        data: dict | None = None,
+        params: dict | None = None,
     ) -> Any:
-        return await self._request(
+        return self._request(
             method="POST",
             url=path,
             headers=headers,

@@ -1,2 +1,2 @@
-from .base import AsyncHTTPClientABC
-from .http_clients import AsyncHTTPClient
+from .base import BaseHttpClient
+from .http_clients import HttpxHttpClient
