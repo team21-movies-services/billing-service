@@ -1,5 +1,5 @@
 from rodi import Container
-from shared.clients import AsyncHTTPClient, AsyncHTTPClientABC
+from shared.clients import AsyncHTTPClient
 from shared.services import EventSenderService
 from worker.clients import DbClientABC, SQLAlchemyDbClient
 from worker.core.config import Settings
@@ -24,7 +24,7 @@ app.register(Logger)
 
 # Clients
 app.add_singleton(DbClientABC, SQLAlchemyDbClient)
-app.add_singleton(AsyncHTTPClientABC, AsyncHTTPClient)
+app.register(AsyncHTTPClient)
 
 # PaymentProvider
 app.register(YookassaPaymentProvider)
