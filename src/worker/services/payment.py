@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 
-from shared.services.event_sender_service import EventSenderService
+from shared.services import EventSenderService
 from worker.core.config import Settings
 from worker.providers import ProviderFactory
 from worker.uow import UnitOfWorkABC
