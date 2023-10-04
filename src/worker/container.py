@@ -1,5 +1,5 @@
 from rodi import Container
-from shared.clients import AsyncHTTPClient, AsyncHTTPClientABC
+from shared.clients import AsyncHTTPClientABC, AsyncHTTPClient
 from shared.services import EventSenderService
 from worker.clients import DbClientABC, SQLAlchemyDbClient
 from worker.core.config import Settings
