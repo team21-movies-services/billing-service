@@ -46,11 +46,13 @@ def upgrade() -> None:
     waiting_for_capture_id = uuid4()
     succeeded_id = uuid4()
     canceled_id = uuid4()
+    created_id = uuid4()
     op.execute(
         sa.sql.text(
             f"""
             INSERT INTO pay_status (id, name, alias) VALUES
-            ('{pending_id}', 'Платёж создан', 'pending'),
+            ('{created_id}', 'Платеж создан', 'created'),
+            ('{pending_id}', 'Платёж отправлен платежному провайдеру', 'pending'),
             ('{waiting_for_capture_id}', 'Ожидание списания', 'waiting_for_capture'),
             ('{succeeded_id}', 'Платеж успешно завершён', 'succeeded'),
             ('{canceled_id}', 'Платеж отменён', 'canceled');
@@ -92,5 +94,7 @@ def downgrade() -> None:
     op.execute(sa.sql.text("DELETE FROM tariffs WHERE alias IN ('base')"))
     op.execute(sa.sql.text("DELETE FROM pay_systems WHERE alias IN ('yookassa')"))
     op.execute(
-        sa.sql.text("DELETE FROM pay_status WHERE alias IN ('pending', 'waiting_for_capture', 'succeeded', 'canceled')")
+        sa.sql.text(
+            "DELETE FROM pay_status WHERE alias IN ('created', 'pending', 'waiting_for_capture', 'succeeded', 'canceled')"
+        )
     )
