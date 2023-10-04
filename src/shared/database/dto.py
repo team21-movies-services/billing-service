@@ -35,7 +35,7 @@ class TariffDTO(BaseDTO):
                 ru_period_unit = "год"
             case _:
                 ru_period_unit = self.period_unit
-        return f"{self.name}, Срок: {self.period} {self.period_unit} {ru_period_unit}"
+        return f"{self.name}, Срок: {self.period} {ru_period_unit}"
 
 
 class PaySystemDTO(BaseDTO):
@@ -58,6 +58,7 @@ class UserPaymentDTO(BaseDTO):
 
 
 class UserSubscriptionDTO(BaseDTO):
+    id: UUID
     tariff_id: UUID
     user_id: UUID
     tariff: TariffDTO
