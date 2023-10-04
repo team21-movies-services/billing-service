@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass
 
+from shared.services.event_sender_service import EventSenderService
 from worker.core.config import Settings
 from worker.providers import ProviderFactory
 from worker.uow import UnitOfWorkABC
@@ -13,6 +14,7 @@ class PaymentStatusService:
     _provider_factory: ProviderFactory
     _settings: Settings
     _uow: UnitOfWorkABC
+    _event_service: EventSenderService
 
     def update_pending_payments(self):
         with self._uow:
@@ -24,6 +26,9 @@ class PaymentStatusService:
                     continue
                 is_updated = self._uow.payment_repo.set_payment_status(payment)
                 if is_updated:
+                    payment_data = {"payment_id": updated_payment.id, "payment_status": updated_payment.status}
+                    url = 'https://4178e455-13d6-4c19-aad9-32017ec7f721.mock.pstmn.io/actions'
+                    self._event_service.send_event(url=url, data=payment_data)
                     logger.info(
                         "Updated payment with id %s to status %s",
                         updated_payment.id,
