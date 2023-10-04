@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class HttpxHttpClient(BaseHttpClient):
-    def __init__(self, httpx_client: httpx.Client):
-        self.httpx_client = httpx_client
+    def __init__(self):
+        self._httpx_client = httpx.Client()
 
     def _request(
         self,
@@ -22,7 +22,7 @@ class HttpxHttpClient(BaseHttpClient):
         params: dict | None = None,
         data: dict | None = None,
     ) -> Any:
-        response = self.httpx_client.request(
+        response = self._httpx_client.request(
             method,
             url,
             headers=headers,
