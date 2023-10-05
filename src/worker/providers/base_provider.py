@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
+from worker.schemas import UserPaymentCreatedSchema
 
 
 class BasePaymentProvider(ABC):
@@ -10,6 +11,6 @@ class BasePaymentProvider(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def make_recurrent_payment(self, subscription: UserSubscriptionDTO):
+    def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema:
         """Make recurrent payment with saved data"""
         raise NotImplementedError

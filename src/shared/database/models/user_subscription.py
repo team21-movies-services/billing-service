@@ -66,6 +66,12 @@ class UserSubscription(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         nullable=False,
         comment="Количество совершённых попыток автопродления платежа",
     )
+    last_check: Mapped[datetime] = Column(
+        TIMESTAMP(timezone=False),
+        default=datetime.utcnow,
+        nullable=True,
+        comment="Дата последней проверки подписки",
+    )
 
     tariff: Mapped[Tariff] = relationship()
     user_payment: Mapped[UserPayment] = relationship()

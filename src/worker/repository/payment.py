@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
 from shared.database.models import PayStatus, UserPayment
@@ -36,7 +36,7 @@ class UserPaymentsRepository:
         result = [UserPaymentDTO.model_validate(payment) for payment in payments]
         return result
 
-    def set_payment_status(self, payment_id: UUID, status: str) -> bool:
+    def set_status(self, payment_id: UUID, status: str) -> bool:
         query = select(UserPayment).where(UserPayment.id == payment_id)
         payment_instance = self._session.execute(query).scalar()
 
@@ -52,8 +52,8 @@ class UserPaymentsRepository:
 
     def create_blank_payment(self, subscription: UserSubscriptionDTO, status: str = "created") -> UserPaymentDTO:
         status_instance = self._get_instance_by_alias(PayStatus, status)
-        logger.debug(subscription.user_payment.pay_system_id)
         payment = UserPayment(
+            id=uuid4(),
             pay_system_id=subscription.user_payment.pay_system_id,
             pay_status_id=status_instance.id,
             payment_id=subscription.user_payment.payment_id,
@@ -63,6 +63,7 @@ class UserPaymentsRepository:
             json_sale={},
         )
         self._session.add(payment)
+        self._session.flush((payment,))
         return UserPaymentDTO.model_validate(payment)
 
     def _get_instance_by_alias(self, cls: type[BaseModel], alias: str) -> BaseModel:

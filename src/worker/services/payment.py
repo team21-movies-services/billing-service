@@ -23,7 +23,7 @@ class PaymentStatusService:
                 new_status = self._request_new_payment_status(payment)
                 if new_status == payment.pay_status.alias:
                     continue
-                is_updated = self._uow.payment_repo.set_payment_status(payment.id, new_status)
+                is_updated = self._uow.payment_repo.set_status(payment.id, new_status)
                 if not is_updated:
                     logger.warning("Failed to update payment status for payment ID %s", payment.id)
             self._uow.commit()

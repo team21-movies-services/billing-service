@@ -1,15 +1,35 @@
 import logging
 
 from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
-from shared.exceptions import PaymentExternalApiException
+from shared.exceptions import PaymentCancelledException, PaymentExternalApiException
 from worker.core.config import Settings
-from worker.schemas.payment import UserPaymentCreatedSchema
+from worker.schemas.payment import ErrorAction, UserPaymentCreatedSchema
 from yookassa import Configuration, Payment
-from yookassa.client import BadRequestError, NotFoundError
+from yookassa.client import (
+    ApiError,
+    BadRequestError,
+    ForbiddenError,
+    NotFoundError,
+    ResponseProcessingError,
+    TooManyRequestsError,
+    UnauthorizedError,
+)
+from yookassa.domain.models import CancellationDetailsReasonCode
+from yookassa.payment import PaymentResponse
 
 from .base_provider import BasePaymentProvider
 
 logger = logging.getLogger(__name__)
+
+yookassa_exceptions = (
+    BadRequestError,
+    NotFoundError,
+    TooManyRequestsError,
+    UnauthorizedError,
+    ResponseProcessingError,
+    ForbiddenError,
+    ApiError,
+)
 
 
 class YookassaPaymentProvider(BasePaymentProvider):
@@ -31,20 +51,41 @@ class YookassaPaymentProvider(BasePaymentProvider):
         logger.debug("Payment %s changed status to %s", payment.id, payment.pay_status.alias)
         return updated_payment.status
 
-    def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema | bool:
+    def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema:
         payment_json = subscription.get_yookassa_payment_json()
         try:
             payment = Payment.create(payment_json)
-            return UserPaymentCreatedSchema(
-                id=payment.id,
-                pay_system_alias=subscription.user_payment.pay_system.alias,
-                pay_status_alias=payment.status,
-                user_id=subscription.user_id,
-                payment_id=payment.payment_method.id,
-                amount=payment.amount,
-                purpose=subscription.tariff.info(),
-            )
+            logger.info("Payment request results: %s", payment.json())
         except BadRequestError as e:
-            logger.error("Payment method with id %s not found", subscription.user_payment.payment_id)
-            logger.error("Error message: %s", e)
             raise PaymentExternalApiException from e
+
+        payment_schema = UserPaymentCreatedSchema(
+            id=payment.id,
+            system_alias=subscription.user_payment.pay_system.alias,
+            status_alias=payment.status,
+            user_id=subscription.user_id,
+            payment_id=payment.payment_method.id,
+            amount=payment.amount.value,
+            purpose=subscription.tariff.info(),
+        )
+        if payment.cancellation_details:
+            error_action = self._handle_cancellation(payment)
+            raise PaymentCancelledException("Payment was cancelled by external API", error_action=error_action)
+        return payment_schema
+
+    @staticmethod
+    def _handle_cancellation(payment: PaymentResponse):
+        set_inactive_list = [
+            CancellationDetailsReasonCode.PERMISSION_REVOKED,
+            CancellationDetailsReasonCode.PAYMENT_METHOD_RESTRICTED,
+            CancellationDetailsReasonCode.CARD_EXPIRED,
+        ]
+        retry_list = [
+            CancellationDetailsReasonCode.INSUFFICIENT_FUNDS,
+            CancellationDetailsReasonCode.PAYMENT_METHOD_LIMIT_EXCEEDED,
+        ]
+
+        if payment.cancellation_details.reason in set_inactive_list:
+            return ErrorAction.set_inactive
+        if payment.cancellation_details.reason in retry_list:
+            return ErrorAction.retry

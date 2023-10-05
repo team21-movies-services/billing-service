@@ -1,4 +1,4 @@
-__all__ = ['PaymentException', 'PaymentExternalApiException']
+__all__ = ['PaymentException', 'PaymentExternalApiException', 'PaymentCancelledException']
 
 
 class PaymentException(Exception):
@@ -7,3 +7,9 @@ class PaymentException(Exception):
 
 class PaymentExternalApiException(PaymentException):
     pass
+
+
+class PaymentCancelledException(PaymentException):
+    def __init__(self, message, error_action=None):
+        super().__init__(message)
+        self.error_action = error_action
