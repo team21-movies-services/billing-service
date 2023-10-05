@@ -1,12 +1,13 @@
 import logging
 from uuid import uuid4
 
-from shared.providers.payments.base_provider import BasePaymentProvider
 from shared.schemas.payment import (
     PaymentAddSchema,
     PaymentResponseSchema,
     PaymentSchema,
 )
+
+from .base_provider import BasePaymentProvider
 
 logger = logging.getLogger(__name__)
 
@@ -22,4 +23,4 @@ class MockPaymentProvider(BasePaymentProvider):
 
     def create_payment(self, payment_add_schema: PaymentAddSchema) -> PaymentResponseSchema | None:
         logger.debug("Mock Provider create payment")
-        return PaymentResponseSchema(id=str(uuid4()), status="mock")
+        return PaymentResponseSchema(id=str(uuid4()), status="mock", redirect_url="localhost")

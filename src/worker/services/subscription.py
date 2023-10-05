@@ -1,8 +1,8 @@
 import logging
 from dataclasses import dataclass
 
+from shared.providers.payments import ProviderFactory
 from worker.core.config import Settings
-from worker.providers import ProviderFactory
 from worker.uow import UnitOfWorkABC
 
 logger = logging.getLogger(__name__)

@@ -2,6 +2,7 @@ from rodi import Container
 from shared.providers.payments.factory import ProviderFactory
 from shared.providers.payments.mock_provider import MockPaymentProvider
 from shared.providers.payments.yookassa_provider import YookassaPaymentProvider
+from shared.settings import YookassaBaseConfig
 from worker.clients.database.base_db_client import DbClientABC
 from worker.clients.database.pg_client import SQLAlchemyDbClient
 from worker.core.config import Settings
@@ -15,7 +16,7 @@ app = Container()
 settings = Settings()
 
 app.register(Settings, instance=settings)
-
+app.register(YookassaBaseConfig, instance=settings.yookassa)
 
 # Logging
 app.register(Logger)
