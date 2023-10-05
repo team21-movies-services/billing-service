@@ -8,7 +8,7 @@ from worker.core.config import Settings
 @dataclass
 class EventSenderService:
     _http_client: BaseHttpClient
-    _settings: Settings
+    _url: Settings.event_service.event_service_url
 
     def send_event(
         self,
@@ -17,9 +17,8 @@ class EventSenderService:
         headers: dict | None = None,
         params: dict | None = None,
     ):
-        url = self._settings.event_service.event_service_url
         send_data = {
             'event_type': event_type,
             'event_data': data,
         }
-        self._http_client.post(path=url, data=send_data, headers=headers, params=params)
+        self._http_client.post(path=self._url, data=send_data, headers=headers, params=params)
