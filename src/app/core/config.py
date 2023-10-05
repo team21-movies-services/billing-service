@@ -38,11 +38,20 @@ class PostgresConfig(BaseSettings):
 class AdminConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="ADMIN_")
 
+    login_url: str = Field(default="https://9c838776-e431-476a-81a9-7a6e4ac16878.mock.pstmn.io/login")
+    secret_key: str = Field(default="super_secret_key")
     debug: bool = Field(default=False)
 
 
+# Настройки Юкассы
 class YookassaConfig(YookassaBaseConfig):
     return_url: str = Field(default='localhost')
+
+
+# Настройки Sentry
+class SentryConfig(BaseSettings):
+    dsn: str = Field(default="dsn", alias='SENTRY_DSN')
+    enable: bool = Field(default=True, alias='SENTRY_ENABLE')
 
 
 class Settings(BaseSettings):
@@ -51,6 +60,7 @@ class Settings(BaseSettings):
     postgres: PostgresConfig = PostgresConfig()
     admin: AdminConfig = AdminConfig()
     yookassa: YookassaConfig = YookassaConfig()
+    sentry: SentryConfig = SentryConfig()
 
 
 settings = Settings()

@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from shared.settings import YookassaBaseConfig
@@ -8,6 +10,10 @@ class WorkerSettings(BaseSettings):
 
     log_level: str = Field(default="DEBUG")
     pending_payments_check: int = Field(default=60)
+    disable_subs_h: int = Field(default=19)
+    disable_subs_m: int = Field(default=14)
+
+    tz: timezone = Field(default=timezone.utc)
 
 
 class PostgresSettings(BaseSettings):
@@ -29,7 +35,13 @@ class YookassaConfig(YookassaBaseConfig):
     ...
 
 
+class SentryConfig(BaseSettings):
+    dsn: str = Field(default="dsn", alias='SENTRY_DSN')
+    enable: bool = Field(default=False, alias='SENTRY_ENABLE')
+
+
 class Settings(BaseSettings):
     worker: WorkerSettings = WorkerSettings()
     postgres: PostgresSettings = PostgresSettings()
     yookassa: YookassaConfig = YookassaConfig()
+    sentry: SentryConfig = SentryConfig()

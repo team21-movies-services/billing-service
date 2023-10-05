@@ -47,8 +47,9 @@ class AuthService(AuthServiceABC):
         payload = self._validate_token(access_token)
         user_id = payload.get("user_id")
         is_superuser = payload.get("is_superuser", False)
+        roles = payload.get("roles", [])
         if not user_id:
             logger.error(f"Can't get user_id from access token! {access_token}")
             raise auth_exceptions.TokenDecodeException()
 
-        return AuthData(user_id=UUID(user_id), is_superuser=is_superuser)
+        return AuthData(user_id=UUID(user_id), is_superuser=is_superuser, roles=roles)

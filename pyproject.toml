@@ -32,6 +32,8 @@ psycopg = {extras = ["binary"], version = "^3.1.10"}
 sqlalchemy = "^2.0.21"
 sqladmin = "^0.15.0"
 yookassa = "^2.4.0"
+itsdangerous = "^2.1.2"
+sentry-sdk = "^1.31.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -74,6 +76,7 @@ pydantic = "^2.4.1"
 pydantic-settings = "^2.0.3"
 yookassa = "^2.4.0"
 scheduler = "^0.8.4"
+sentry-sdk = "^1.31.0"
 
 
 [build-system]
