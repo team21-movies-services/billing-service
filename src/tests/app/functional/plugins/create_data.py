@@ -24,6 +24,7 @@ async def tariffs(db_session: AsyncSession):
     yield _tariffs
     for tariff in _tariffs:
         await db_session.delete(tariff)
+        await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -36,6 +37,7 @@ async def tariff(db_session: AsyncSession):
     yield tariff
 
     await db_session.delete(tariff)
+    await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -48,6 +50,7 @@ async def pay_system(db_session: AsyncSession):
     yield pay_system
 
     await db_session.delete(pay_system)
+    await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -60,6 +63,7 @@ async def pay_status(db_session: AsyncSession):
     yield pay_status
 
     await db_session.delete(pay_status)
+    await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -72,6 +76,7 @@ async def user_payment(db_session: AsyncSession, auth_user: AuthData, pay_system
     yield user_payment
 
     await db_session.delete(user_payment)
+    await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -84,6 +89,7 @@ async def subscription(db_session: AsyncSession, auth_user: AuthData, tariff: Ta
     yield subscription
 
     await db_session.delete(subscription)
+    await db_session.commit()
 
 
 @pytest_asyncio.fixture()
@@ -96,3 +102,4 @@ async def renew_subscription(db_session: AsyncSession, auth_user: AuthData, tari
     yield subscription
 
     await db_session.delete(subscription)
+    await db_session.commit()

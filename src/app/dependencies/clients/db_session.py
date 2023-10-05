@@ -1,11 +1,7 @@
 from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends, FastAPI, Request
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-
-from app.core.config import Settings
-from app.dependencies.settings import get_settings
-from app.providers.pg_providers import SQLAlchemyProvider
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def get_db_session(
@@ -21,19 +17,11 @@ async def get_db_session(
         await session.close()
 
 
-async def get_db_session_maker(
-    request: Request,
-    settings: Settings = Depends(get_settings),
-):
+async def get_db_session_maker(request: Request):
     app: FastAPI = request.app
-    sa_provider = SQLAlchemyProvider(
-        app=app,
-        async_dns=settings.postgres.database_url,
-        echo_log=settings.postgres.echo_log,
-    )
-    session_maker = sa_provider.async_session_maker
+    session_maker = app.state.async_session_maker
     return session_maker
 
 
 DbSessionDep = Annotated[AsyncSession, Depends(get_db_session)]
-DbSessionMakerDep = Annotated[async_sessionmaker[AsyncSession], Depends(get_db_session_maker)]
+DbSessionMakerDep = Annotated[AsyncSession, Depends(get_db_session_maker)]
