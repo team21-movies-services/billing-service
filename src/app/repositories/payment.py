@@ -21,7 +21,7 @@ class PaymentRepositoryABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_payment(self, payment_id: str, status_id: UUID) -> UserPaymentResponse | None:
+    async def update_payment(self, id: UUID, payment_id: str, status_id: UUID) -> UserPaymentResponse | None:
         raise NotImplementedError
 
 
@@ -75,8 +75,13 @@ class PaymentRepository(SQLAlchemyRepo, PaymentRepositoryABC):
             )
         return None
 
-    async def update_payment(self, payment_id: str, status_id: UUID) -> UserPaymentResponse | None:
-        stmt = update(UserPayment).values(payment_id=payment_id, pay_status_id=status_id).returning(UserPayment)
+    async def update_payment(self, id: UUID, payment_id: str, status_id: UUID) -> UserPaymentResponse | None:
+        stmt = (
+            update(UserPayment)
+            .values(payment_id=payment_id, pay_status_id=status_id)
+            .where(UserPayment.id == id)
+            .returning(UserPayment)
+        )
         result = await self._session.execute(stmt)
         if user_payment := result.scalar():
             return user_payment
