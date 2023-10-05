@@ -3,12 +3,13 @@ from dataclasses import dataclass
 from shared.clients import BaseHttpClient
 from shared.constants import EventTypes
 from worker.core.config import Settings
+from worker.container import app
 
 
 @dataclass
 class EventSenderService:
     _http_client: BaseHttpClient
-    _url: Settings.event_service.event_service_url
+    _url: app.resolve(Settings).event_service.event_service_url  # type: ignore
 
     def send_event(
         self,
