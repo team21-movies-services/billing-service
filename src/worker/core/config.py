@@ -42,13 +42,8 @@ class SentryConfig(BaseSettings):
     enable: bool = Field(default=False, alias='SENTRY_ENABLE')
 
 
-class EventSenderConfig:
-    event_service_url: str = Field(default='', alias='EVENT_SERVICE_URL')
-
-
 class Settings(BaseSettings):
     worker: WorkerSettings = WorkerSettings()
     postgres: PostgresSettings = PostgresSettings()
     yookassa: YookassaConfig = YookassaConfig()
     sentry: SentryConfig = SentryConfig()
-    event_service: EventSenderConfig = EventSenderConfig()
