@@ -11,7 +11,7 @@ class EventSenderService:
     _settings: Settings
 
     def send_event(
-        self, event_type: EventTypes, data: dict | None = None, headers: dict | None = None, params: dict | None = None
+        self, event_type: EventTypes, data: dict | None = None, headers: dict | None = None, params: dict | None = None,
     ):
         url = self._settings.event_service.event_service_url
         send_data = {
