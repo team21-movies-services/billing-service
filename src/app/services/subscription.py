@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from shared.exceptions.not_exist import (
+    PaymentCreateError,
     PayStatusDoesNotExist,
     PaySystemDoesNotExist,
     TariffDoesNotExist,
@@ -61,8 +62,7 @@ class SubscriptionService(SubscriptionServiceABC):
 
             payment = await self._subscription_uow.payment_repository.add_payment(payment_add_schema)
             if not payment:
-                # FIXME: error 500
-                raise Exception
+                raise PaymentCreateError
 
             payment_provider = self.payment_factory.get_payment_provider(provider_name=pay_system.alias)
 

@@ -9,6 +9,10 @@ class NotExistsExceptionInfo(ExceptionEnum):
     PAY_STATUS_SYSTEM_NOT_EXISTS = "3005", "Pay status not exists."
 
 
+class CreateExceptionInfo(ExceptionEnum):
+    PAYMENT_CREATE_ERROR = "5001", "Some error to create payment."
+
+
 class ObjectDoesNotExist(BaseDoesNotExist):
     """Object does not exist Exception"""
 
@@ -28,6 +32,13 @@ class PayStatusDoesNotExist(BaseDoesNotExist):
 
     code: str = NotExistsExceptionInfo.PAY_STATUS_SYSTEM_NOT_EXISTS.code
     error: str = NotExistsExceptionInfo.PAY_STATUS_SYSTEM_NOT_EXISTS.error
+
+
+class PaymentCreateError(BaseDoesNotExist):
+    """Payment create error Exception"""
+
+    code: str = CreateExceptionInfo.PAYMENT_CREATE_ERROR.code
+    error: str = CreateExceptionInfo.PAYMENT_CREATE_ERROR.error
 
 
 class PaySystemDoesNotExist(BaseDoesNotExist):
