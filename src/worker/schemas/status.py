@@ -7,3 +7,4 @@ class StatusEnum(StrEnum):
     succeeded = "succeeded"
     canceled = "canceled"
     failed = "failed"
+    mocked = "mocked"
