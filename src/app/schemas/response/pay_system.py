@@ -9,3 +9,6 @@ class PaySystemResponse(BaseModelResponse):
     alias: str
     currency_code: str
     json_data: dict
+
+    def __str__(self) -> str:
+        return self.name

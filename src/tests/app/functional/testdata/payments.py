@@ -15,6 +15,6 @@ def fake_user_payment(pay_system_id: UUID, pay_status_id: UUID, user_id: UUID) -
         payment_id=uuid4(),
         amount=90,
         purpose="Subscription",
-        json_sale={},
+        json_detail={},
     )
     return UserPayment(**data)

@@ -1,14 +1,22 @@
+from fastapi import Depends
+from shared.providers.payments import MockPaymentProvider, YookassaPaymentProvider
+from shared.providers.payments.factory import ProviderFactory
+
+from app.core.config import Settings
 from app.dependencies.registrator import add_factory_to_mapper
-from app.dependencies.repository_dependencies.user_subscription import (
-    SubscriptionRepositoryDep,
+from app.dependencies.settings import get_settings
+from app.dependencies.uow_dependencies.subscription_uow_factory import (
+    SubscriptionUoWDep,
 )
-from app.dependencies.service_dependencies.tariff_factory import TariffServiceDep
 from app.services.subscription import SubscriptionService, SubscriptionServiceABC
 
 
 @add_factory_to_mapper(SubscriptionServiceABC)
 def create_subscription_service(
-    subscription_repository: SubscriptionRepositoryDep,
-    tariff_service: TariffServiceDep,
+    subscription_uow: SubscriptionUoWDep,
+    settings: Settings = Depends(get_settings),
 ) -> SubscriptionService:
-    return SubscriptionService(tariff_service, subscription_repository)
+    yookassa_provider = YookassaPaymentProvider(settings.yookassa)
+    mock_payment_provider = MockPaymentProvider()
+    payment_provider_factory = ProviderFactory(yookassa_provider, mock_payment_provider)
+    return SubscriptionService(subscription_uow, payment_provider_factory)

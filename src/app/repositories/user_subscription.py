@@ -4,7 +4,8 @@ from uuid import UUID
 
 from shared.database.models.user_subscription import UserSubscription
 from shared.exceptions.not_exist import UserCurrentSubscriptionNotExist
-from sqlalchemy import select, update
+from shared.schemas.subscription import SubscriptionAddSchema
+from sqlalchemy import insert, select, update
 from sqlalchemy.orm import contains_eager
 
 from app.repositories.base import SQLAlchemyRepo
@@ -22,6 +23,10 @@ class UserSubscriptionRepositoryABC(ABC):
 
     @abstractmethod
     async def cancel_renew_by_user_id(self, user_id: UUID) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def add_subscription(self, subscription_add_schema: SubscriptionAddSchema):
         raise NotImplementedError
 
 
@@ -46,3 +51,10 @@ class UserSubscriptionRepository(SQLAlchemyRepo, UserSubscriptionRepositoryABC):
         query = update(UserSubscription).where(UserSubscription.user_id == user_id).values(renew=False)
         await self._session.execute(query)
         await self._session.commit()
+
+    async def add_subscription(self, subscription_add_schema: SubscriptionAddSchema):
+        stmt = insert(UserSubscription).values(**subscription_add_schema.model_dump()).returning(UserSubscription)
+        result = await self._session.execute(stmt)
+        if user_payment := result.scalar():
+            return user_payment
+        return None

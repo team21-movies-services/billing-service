@@ -14,7 +14,7 @@ class UserPaymentParams(TypedDict):
     user_id: NotRequired[uuid.UUID]
     pay_system_id: NotRequired[uuid.UUID]
     amount: NotRequired[int]
-    json_sale: NotRequired[dict]
+    json_detail: NotRequired[dict]
     purpose: NotRequired[Literal["subscription"]]
     created_at: NotRequired[datetime.datetime]
     updated_at: NotRequired[datetime.datetime]
@@ -35,7 +35,7 @@ def get_user_payments(
                 "pay_system_id": uuid.uuid4(),
                 "payment_id": uuid.uuid4(),
                 "amount": mf("age", maximum=99, minimum=1),
-                "json_sale": {},
+                "json_detail": {},
                 "purpose": mf("choice", items=purposes),
                 "created_at": mf("datetime.date"),
                 "updated_at": mf("datetime.date"),

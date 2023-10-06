@@ -3,7 +3,15 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
-__all__ = ["SubscriptionSchema"]
+
+class SubscriptionAddSchema(BaseModel):
+    user_id: UUID
+    tariff_id: UUID
+    user_payment_id: UUID
+    period_start: datetime
+    period_end: datetime
+    is_disabled: bool
+    renew: bool
 
 
 class SubscriptionSchema(BaseModel):

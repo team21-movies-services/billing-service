@@ -7,9 +7,9 @@ from uuid import UUID
 from shared.database.dto import UserSubscriptionDTO
 from shared.database.models import UserSubscription
 from shared.database.models.tariff import TariffPeriodUnit
+from shared.schemas.subscription import SubscriptionSchema
 from sqlalchemy import and_, not_, or_, select, update
 from sqlalchemy.orm import Session
-from worker.schemas import SubscriptionSchema
 
 logger = logging.getLogger(__name__)
 

@@ -5,11 +5,10 @@ from uuid import UUID
 from shared.constants import EventTypes
 from shared.database.dto import UserPaymentDTO
 from shared.exceptions.payments import PaymentExternalApiException
+from shared.providers.payments import BasePaymentProvider, ProviderFactory
+from shared.schemas.status import StatusEnum
 from shared.services import EventSenderService
 from worker.core.config import Settings
-from worker.providers import ProviderFactory
-from worker.providers.base_provider import BasePaymentProvider
-from worker.schemas.status import StatusEnum
 from worker.uow import UnitOfWorkABC
 
 logger = logging.getLogger(__name__)

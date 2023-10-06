@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import RedirectResponse
 
 from app.dependencies.auth import get_auth_data
 from app.schemas.domain.auth import AuthData
@@ -24,11 +25,13 @@ async def _subscription_buy(
     subscription_service: SubscriptionServiceABC = Depends(),
     auth_data: AuthData = Depends(get_auth_data),
 ):
-    return await subscription_service.buy(
-        pay_system=pay_system,
+    redirect_url = await subscription_service.buy(
+        pay_system_alias=pay_system,
         user_id=auth_data.user_id,
         tariff_id=subscription_request.tariff_id,
+        renew=subscription_request.renew,
     )
+    return RedirectResponse(redirect_url, status_code=302)
 
 
 @router.get(

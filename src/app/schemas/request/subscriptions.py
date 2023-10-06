@@ -5,3 +5,4 @@ from pydantic import BaseModel
 
 class SubscriptionRequest(BaseModel):
     tariff_id: UUID
+    renew: bool

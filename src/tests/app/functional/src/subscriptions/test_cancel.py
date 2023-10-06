@@ -3,6 +3,7 @@ from http import HTTPStatus
 import pytest
 from httpx import AsyncClient
 from shared.database.models.user_subscription import UserSubscription
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.domain.auth import AuthData
 
@@ -18,10 +19,13 @@ async def test_cancel_subscription(
     expected_status: int,
     renew_subscription: UserSubscription,
     auth_user: AuthData,
+    db_session: AsyncSession,
 ):
     assert renew_subscription.renew is True
 
     response = await api_client.request(method=method, url=route)
+
+    await db_session.refresh(renew_subscription)
 
     assert response.status_code == expected_status
     assert renew_subscription.id == renew_subscription.id

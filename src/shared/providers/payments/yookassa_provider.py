@@ -1,10 +1,18 @@
 import logging
 
+from requests.exceptions import ConnectionError
 from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
 from shared.exceptions import PaymentCancelledException, PaymentExternalApiException
-from worker.core.config import Settings
-from worker.schemas.payment import ErrorAction, UserPaymentCreatedSchema
-from worker.schemas.status import StatusEnum
+from shared.exceptions.clients import HTTPClientException
+from shared.providers.payments.base_provider import BasePaymentProvider
+from shared.schemas.payment import (
+    ErrorAction,
+    PaymentAddSchema,
+    PaymentResponseSchema,
+    UserPaymentCreatedSchema,
+)
+from shared.schemas.status import StatusEnum
+from shared.settings import YookassaBaseConfig
 from yookassa import Configuration, Payment
 from yookassa.client import (
     ApiError,
@@ -16,11 +24,10 @@ from yookassa.client import (
     UnauthorizedError,
 )
 from yookassa.domain.models import CancellationDetailsReasonCode
-from yookassa.payment import PaymentResponse
-
-from .base_provider import BasePaymentProvider
+from yookassa.domain.response.payment_response import PaymentResponse
 
 logger = logging.getLogger(__name__)
+
 
 yookassa_exceptions = (
     BadRequestError,
@@ -37,26 +44,28 @@ status_enum_mapping = {
     "canceled": StatusEnum.canceled,
     "succeeded": StatusEnum.succeeded,
     "pending": StatusEnum.pending,
+    "failed": StatusEnum.failed,
 }
 
 
 class YookassaPaymentProvider(BasePaymentProvider):
-    def __init__(self, settings: Settings):
-        Configuration.configure(settings.yookassa.shop_id, settings.yookassa.api_key)
+    def __init__(self, yookassa_config: YookassaBaseConfig):
+        self.yookassa_config = yookassa_config
+        Configuration.configure(self.yookassa_config.shop_id, self.yookassa_config.api_key)
 
     def get_payment_status(self, payment: UserPaymentDTO) -> str:
         """Get info from remote payment provider"""
         logger.debug("Checking updates for payment %s", payment.id)
         try:
-            updated_payment = Payment.find_one(str(payment.id))
+            updated_payment = Payment.find_one(str(payment.payment_id))
         except NotFoundError as e:
-            logger.error("Payment with id %s not found", payment.id)
+            logger.error("Payment with id %s not found", payment.payment_id)
             raise PaymentExternalApiException from e
         if updated_payment.status == payment.pay_status.alias:
-            logger.debug("Payment %s have still have status %s", payment.id, payment.pay_status.alias)
+            logger.debug("Payment %s have still have status %s", payment.payment_id, payment.pay_status.alias)
             return updated_payment.status
-        payment.pay_status.alias = updated_payment.pay_status.alias
-        logger.debug("Payment %s changed status to %s", payment.id, payment.pay_status.alias)
+        payment.pay_status.alias = updated_payment.status
+        logger.debug("Payment %s changed status to %s", payment.payment_id, payment.pay_status.alias)
         return updated_payment.status
 
     def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema:
@@ -95,3 +104,19 @@ class YookassaPaymentProvider(BasePaymentProvider):
 
     def map_status(self, status: str) -> StatusEnum:
         return status_enum_mapping[status]
+
+    def get_return_url(self) -> str:
+        return self.yookassa_config.return_url
+
+    def create_payment(self, payment_add_schema: PaymentAddSchema) -> PaymentResponseSchema | None:
+        try:
+            payment_response: PaymentResponse = Payment.create(payment_add_schema.model_dump())
+        except ConnectionError:
+            raise HTTPClientException
+        if payment_response:
+            return PaymentResponseSchema(
+                id=str(payment_response.id),
+                status=str(payment_response.status),
+                redirect_url=str(payment_response.confirmation.confirmation_url),
+            )
+        return None

@@ -26,7 +26,7 @@ class UserPaymentsRepository:
             .where(PayStatus.alias == status)
             .join(UserPayment.pay_status)
             .join(UserPayment.pay_system)
-            .with_for_update(skip_locked=True, of=UserPayment)
+            # .with_for_update(skip_locked=True, of=UserPayment)
             .where(UserPayment.created_at <= target_time)
             .options(contains_eager(UserPayment.pay_status))
             .options(contains_eager(UserPayment.pay_system))
@@ -80,11 +80,3 @@ class UserPaymentsRepository:
         except MultipleResultsFound:
             logger.error("%s with alias %s not unique", cls.__name__, alias)
             raise
-
-    # def set_status(self, payment_id: UUID, status: str):
-    #     query = select(UserPayment).where(UserPayment.id == payment_id)
-    #     sub = self._session.execute(query).scalar_one()
-    #     sub.renew_try_count += 1
-    #     retries = sub.renew_try_count
-    #     logging.info("Incrementing subscription %s renew tries count, new value %s", subscription.id, retries)
-    #     return retries

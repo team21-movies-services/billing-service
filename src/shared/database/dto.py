@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from shared.database.models.tariff import TariffPeriodUnit
 
 
@@ -54,7 +54,7 @@ class UserPaymentDTO(BaseDTO):
     payment_id: UUID
     amount: int
     purpose: str
-    json_sale: dict | None = Field(default={})
+    json_sale: dict
 
 
 class UserSubscriptionDTO(BaseDTO):
