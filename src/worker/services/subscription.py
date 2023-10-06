@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from uuid import UUID
 
 from shared.constants import EventTypes
 from shared.database.dto import UserSubscriptionDTO
@@ -25,14 +26,8 @@ class SubscriptionService:
         with self._uow:
             subs = self._uow.subscription_repo.disable()
             self._uow.commit()
-            # TODO: отправка события о деактивации подписки
             for sub in subs:
-                cancel_event_data = {
-                    "user_id": sub.user_id,
-                    "sub_id": sub.id,
-                    "tariff_id": sub.tariff_id,
-                }
-                self._event_service.send_event(event_type=EventTypes.CancelSubscripton, data=cancel_event_data)
+                self._send_disable_event(user_id=sub.user_id, sub_id=sub.id, tariff_id=sub.tariff_id)
             logger.info("Subscriptions with ids %s disabled.", ", ".join(str(sub.id) for sub in subs))
         logger.info("Subscriptions disable task complete")
 
@@ -53,7 +48,13 @@ class SubscriptionService:
             self._uow.payment_repo.set_status(new_payment.id, status=StatusEnum.succeeded)
             self._uow.subscription_repo.update_end_period(subscription)
             self._uow.subscription_repo.increment_retries(subscription, reset=True)
-            # TODO: Отправить сообщение что подписка продлена
+            renewal_event_data = {
+                "user_id": subscription.user_id,
+                "tariff": subscription.tariff,
+                "period_end": subscription.period_end,
+                "user_payment": subscription.user_payment,
+            }
+            self._event_service.send_event(event_type=EventTypes.RenewalSubscription, data=renewal_event_data)
         except PaymentExternalApiException as e:
             logger.warning("Error occurred while make recurrent payment for subscription %s", subscription.id)
             logger.error(e)
@@ -70,9 +71,25 @@ class SubscriptionService:
         match payment_action:
             case ErrorAction.retry:
                 self._uow.subscription_repo.increment_retries(subscription)
-                # TODO: Отправить сообщение что возникла ошибка при списании
+                retry_error_data = {
+                    "user_id": subscription.user_id,
+                    "sub_id": subscription.id,
+                }
+                self._event_service.send_event(event_type=EventTypes.ErrorRetry, data=retry_error_data)
             case ErrorAction.set_inactive:
                 self._uow.subscription_repo.disable_one(subscription)
-                # TODO: Отправить сообщение что подписка отменена
+                self._send_disable_event(
+                    user_id=subscription.user_id,
+                    sub_id=subscription.id,
+                    tariff_id=subscription.tariff_id,
+                )
             case _:
                 raise NotImplementedError
+
+    def _send_disable_event(self, user_id: UUID, sub_id: UUID, tariff_id: str) -> None:
+        disable_event_data = {
+            "user_id": user_id,
+            "sub_id": sub_id,
+            "tariff_id": tariff_id,
+        }
+        self._event_service.send_event(event_type=EventTypes.CancelSubscripton, data=disable_event_data)
