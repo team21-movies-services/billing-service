@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 PENDING_PAYMENTS_CHECK_INTERVAL = timedelta(seconds=settings.worker.pending_payments_check)
 DISABLE_SUBSCRIPTIONS_INTERVAL = time(hour=settings.worker.disable_subs_h, minute=settings.worker.disable_subs_m)
+RENEW_SUBSCRIPTIONS_INTERVAL = time(hour=settings.worker.renew_subs_h, minute=settings.worker.renew_subs_m)
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
 
     subscription_service = app.resolve(SubscriptionService)
     scheduler.daily(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.disable, alias="Subscriptions disable")
-    scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, subscription_service.make_recurrent_payment)
+    scheduler.daily(RENEW_SUBSCRIPTIONS_INTERVAL, subscription_service.make_recurrent_payment)
     while True:
         scheduler.exec_jobs()
         sleep(1)
