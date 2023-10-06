@@ -78,7 +78,7 @@ class SubscriptionRepository:
             TariffPeriodUnit.month: 30,
             TariffPeriodUnit.year: 365,
         }
-        tariff_period = timedelta(days=to_days_map[subscription.tariff.period_unit])
+        tariff_period = timedelta(days=subscription.tariff.period * to_days_map[subscription.tariff.period_unit])
 
         query = select(UserSubscription).where(UserSubscription.id == subscription.id)
         subscription_obj = self._session.execute(query).scalar_one()
