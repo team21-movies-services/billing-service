@@ -167,7 +167,7 @@ class SubscriptionService(SubscriptionServiceABC):
             )
 
             await self._update_payment(payment.id, payment_response.id)
-            await self._create_user_subscription(user_id, tariff.id, payment.id, renew)
+            await self._create_user_subscription(user_id, payment.id, tariff, renew)
 
             await self._subscription_uow.commit()
 
