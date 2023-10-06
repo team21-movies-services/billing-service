@@ -23,10 +23,10 @@ class UserPaymentsRepository:
         target_time = datetime.utcnow() - timedelta(minutes=delay_minutes)
         query = (
             select(UserPayment)
-            .where(PayStatus.alias == status)
             .join(UserPayment.pay_status)
             .join(UserPayment.pay_system)
-            # .with_for_update(skip_locked=True, of=UserPayment)
+            .where(PayStatus.alias == status)
+            .with_for_update(skip_locked=True, of=UserPayment)
             .where(UserPayment.created_at <= target_time)
             .options(contains_eager(UserPayment.pay_status))
             .options(contains_eager(UserPayment.pay_system))

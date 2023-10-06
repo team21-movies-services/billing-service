@@ -21,13 +21,14 @@ class PaymentStatusService:
     _uow: UnitOfWorkABC
     _event_service: EventSenderService
 
-    def update_pending_payments_and_activate_subs(self, delay: int = 5):
+    def update_pending_payments_and_activate_subs(self, delay: int = 0):
         with self._uow:
             payments = self._uow.payment_repo.get_payments_with_status("pending", delay)
             for payment in payments:
                 provider = self._provider_factory.get_payment_provider(payment.pay_system.alias)
                 new_status = self._request_new_payment_status(provider, payment)
                 if new_status == payment.pay_status.alias:
+                    logger.info("Same status for payment id: %s, status %s", payment.payment_id, new_status)
                     continue
                 is_updated = self._uow.payment_repo.set_status(payment.id, new_status)
                 if is_updated:

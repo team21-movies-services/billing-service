@@ -64,8 +64,7 @@ class YookassaPaymentProvider(BasePaymentProvider):
         if updated_payment.status == payment.pay_status.alias:
             logger.debug("Payment %s have still have status %s", payment.payment_id, payment.pay_status.alias)
             return updated_payment.status
-        payment.pay_status.alias = updated_payment.status
-        logger.debug("Payment %s changed status to %s", payment.payment_id, payment.pay_status.alias)
+        logger.debug("Payment %s changed status to %s", payment.payment_id, updated_payment.status)
         return updated_payment.status
 
     def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema:
