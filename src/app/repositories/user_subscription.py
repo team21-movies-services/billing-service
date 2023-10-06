@@ -37,7 +37,7 @@ class UserSubscriptionRepository(SQLAlchemyRepo, UserSubscriptionRepositoryABC):
     async def get_user_current_subscription(self, user_id: UUID) -> UserSubscriptionResponse:
         query = (
             select(UserSubscription)
-            .where(UserSubscription.user_id == user_id, UserSubscription.period_end > datetime.now())
+            .where(UserSubscription.user_id == user_id, UserSubscription.period_end > datetime.utcnow())
             .join(UserSubscription.tariff)
             .options(contains_eager(UserSubscription.tariff))
         )
