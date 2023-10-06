@@ -43,3 +43,5 @@ class PaymentAddSchema(BaseModel):
     amount: PaymentAmount
     confirmation: PaymentConfirmation
     payment_method_data: PaymentMethod = PaymentMethod()
+    save_payment_method: bool = True
+    capture: bool = True
