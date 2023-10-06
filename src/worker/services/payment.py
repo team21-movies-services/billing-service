@@ -2,9 +2,9 @@ import logging
 from dataclasses import dataclass
 
 from shared.constants import EventTypes
+from shared.providers.payments.factory import ProviderFactory
 from shared.services import EventSenderService
 from worker.core.config import Settings
-from worker.providers import ProviderFactory
 from worker.uow import UnitOfWorkABC
 
 logger = logging.getLogger(__name__)

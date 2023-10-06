@@ -2,10 +2,11 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from shared.database.models import PayStatus, UserPayment
+from shared.database.models import PayStatus
+from shared.database.models.user_payment import UserPayment
+from shared.schemas.payment import PaymentSchema
 from sqlalchemy import select
 from sqlalchemy.orm import Session, contains_eager
-from worker.schemas import PaymentSchema
 
 logger = logging.getLogger(__name__)
 

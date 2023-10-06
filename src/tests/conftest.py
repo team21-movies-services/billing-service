@@ -32,6 +32,13 @@ def _create_test_db():
     drop_database(settings.postgres.database_url)
 
 
+@pytest_asyncio.fixture(name='db_session_maker', scope="session")
+async def db_session_maker():
+    engine = create_async_engine(settings.postgres.database_url)
+    session_maker = async_sessionmaker(bind=engine, expire_on_commit=False)
+    return session_maker
+
+
 @pytest_asyncio.fixture(name='db_session', scope="session")
 async def db_session_with_migrations(_create_test_db):
     engine = create_async_engine(settings.postgres.database_url)

@@ -1,24 +1,25 @@
 from rodi import Container
 from shared.clients import BaseHttpClient, HttpxHttpClient
 from shared.core.config import SharedSettings
+from shared.providers.payments.factory import ProviderFactory
+from shared.providers.payments.mock_provider import MockPaymentProvider
+from shared.providers.payments.yookassa_provider import YookassaPaymentProvider
 from shared.services import EventSenderService
+from shared.settings import YookassaBaseConfig
 from worker.clients import DbClientABC, SQLAlchemyDbClient
 from worker.core.config import Settings
 from worker.core.logger import Logger
-from worker.providers import (
-    MockPaymentProvider,
-    ProviderFactory,
-    YookassaPaymentProvider,
-)
-from worker.services import PaymentStatusService, SubscriptionService
+from worker.services.payment import PaymentStatusService
 from worker.services.sentry import SentryService
-from worker.uow import SqlAlchemyUoW, UnitOfWorkABC
+from worker.services.subscription import SubscriptionService
+from worker.uow.uow import SqlAlchemyUoW, UnitOfWorkABC
 
 app = Container()
 settings = Settings()
 shared_settings = SharedSettings()
 
 app.register(Settings, instance=settings)
+app.register(YookassaBaseConfig, instance=settings.yookassa)
 app.register(SharedSettings, instance=shared_settings)
 
 

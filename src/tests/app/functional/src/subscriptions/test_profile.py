@@ -3,6 +3,7 @@ from http import HTTPStatus
 import pytest
 from httpx import AsyncClient
 from shared.database.models.user_subscription import UserSubscription
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.domain.auth import AuthData
 
@@ -18,6 +19,7 @@ async def test_get_profile(
     expected_status: int,
     subscription: UserSubscription,
     auth_user: AuthData,
+    db_session: AsyncSession,
 ):
     response = await api_client.request(method=method, url=route)
     answer = response.json()

@@ -4,7 +4,7 @@ from datetime import datetime
 from shared.database.models import UserSubscription
 from sqlalchemy import not_, or_, update
 from sqlalchemy.orm import Session
-from worker.schemas import SubscriptionSchema
+from worker.schemas.subscription import SubscriptionSchema
 
 
 @dataclass

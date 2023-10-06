@@ -2,6 +2,7 @@ import os
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from shared.settings import YookassaBaseConfig
 
 
 # Настройки Redis
@@ -42,6 +43,11 @@ class AdminConfig(BaseSettings):
     debug: bool = Field(default=False)
 
 
+# Настройки Юкассы
+class YookassaConfig(YookassaBaseConfig):
+    return_url: str = Field(default='localhost')
+
+
 # Настройки Sentry
 class SentryConfig(BaseSettings):
     dsn: str = Field(default="dsn", alias='SENTRY_DSN')
@@ -53,6 +59,7 @@ class Settings(BaseSettings):
     redis: RedisConfig = RedisConfig()
     postgres: PostgresConfig = PostgresConfig()
     admin: AdminConfig = AdminConfig()
+    yookassa: YookassaConfig = YookassaConfig()
     sentry: SentryConfig = SentryConfig()
 
 

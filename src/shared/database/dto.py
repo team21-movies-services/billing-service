@@ -54,7 +54,7 @@ class UserPaymentDTO(BaseDTO):
     payment_id: UUID
     amount: int
     purpose: str
-    json_sale: dict
+    json_detail: dict
 
 
 class UserSubscriptionDTO(BaseDTO):

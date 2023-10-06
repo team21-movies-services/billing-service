@@ -17,4 +17,11 @@ async def get_db_session(
         await session.close()
 
 
+async def get_db_session_maker(request: Request):
+    app: FastAPI = request.app
+    session_maker = app.state.async_session_maker
+    return session_maker
+
+
 DbSessionDep = Annotated[AsyncSession, Depends(get_db_session)]
+DbSessionMakerDep = Annotated[AsyncSession, Depends(get_db_session_maker)]

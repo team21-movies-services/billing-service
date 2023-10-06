@@ -2,6 +2,7 @@ from datetime import timezone
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from shared.settings import YookassaBaseConfig
 
 
 class WorkerSettings(BaseSettings):
@@ -30,11 +31,8 @@ class PostgresSettings(BaseSettings):
         return f"postgresql+psycopg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 
-class YookassaConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="YOOKASSA_")
-
-    api_key: str = Field(default="")
-    shop_id: str = Field(default="")
+class YookassaConfig(YookassaBaseConfig):
+    ...
 
 
 class SentryConfig(BaseSettings):

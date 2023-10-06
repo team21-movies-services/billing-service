@@ -34,11 +34,11 @@ class UserPayment(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):
         nullable=False,
         comment="ID пользователя",
     )
-    payment_id: Mapped[str] = Column(Text, nullable=False, comment="ID платежа во внешней системе")
+    payment_id: Mapped[str] = Column(Text, nullable=True, comment="ID платежа во внешней системе")
     amount: Mapped[Decimal] = Column(Numeric(2), nullable=False, comment="Сумма платежа")
-    purpose: Mapped[str] = Column(Text, nullable=False, comment="Назначение платежа")
+    purpose: Mapped[str] = Column(Text, nullable=True, comment="Назначение платежа")
 
-    json_sale: Mapped[dict] = Column(
+    json_detail: Mapped[dict] = Column(
         JSONB,
         nullable=False,
         default={},
