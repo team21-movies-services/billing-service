@@ -4,7 +4,7 @@ from datetime import datetime
 from uuid import UUID
 
 from dateutil.relativedelta import relativedelta
-from shared.database.models.tariff import Tariff
+from shared.database.models.tariff import Tariff, TariffPeriodUnit
 from shared.exceptions import (
     PaymentCreateError,
     PayStatusDoesNotExist,
@@ -119,7 +119,12 @@ class SubscriptionService(SubscriptionServiceABC):
         renew: bool,
     ):
         period_start = datetime.utcnow()
-        period_delta = {tariff.period_unit: tariff.period}
+        period_unit_map = {
+            TariffPeriodUnit.day.value: 'days',
+            TariffPeriodUnit.month.value: 'months',
+            TariffPeriodUnit.year.value: 'years',
+        }
+        period_delta = {period_unit_map[tariff.period_unit]: tariff.period}
         period_end = datetime.utcnow() + relativedelta(**period_delta)  # type: ignore
         subscription_add = SubscriptionAddSchema(
             user_id=user_id,
