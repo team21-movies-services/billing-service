@@ -25,7 +25,7 @@ def main():
 
     subscription_service = app.resolve(SubscriptionService)
     scheduler.daily(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.disable, alias="Subscriptions disable")
-
+    scheduler.hourly(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.make_recurrent_payment)
     while True:
         scheduler.exec_jobs()
         sleep(1)
