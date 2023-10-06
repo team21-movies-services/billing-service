@@ -1,5 +1,7 @@
 import logging
 
+from requests.exceptions import ConnectionError
+from shared.exceptions.clients import HTTPClientException
 from shared.providers.payments.base_provider import BasePaymentProvider
 from shared.schemas.payment import (
     PaymentAddSchema,
@@ -41,7 +43,10 @@ class YookassaPaymentProvider(BasePaymentProvider):
         return self.yookassa_config.return_url
 
     def create_payment(self, payment_add_schema: PaymentAddSchema) -> PaymentResponseSchema | None:
-        payment_response: PaymentResponse = Payment.create(payment_add_schema.model_dump())
+        try:
+            payment_response: PaymentResponse = Payment.create(payment_add_schema.model_dump())
+        except ConnectionError:
+            raise HTTPClientException
         if payment_response:
             return PaymentResponseSchema(
                 id=str(payment_response.id),

@@ -10,6 +10,7 @@ from shared.exceptions import (
     SubscriptionCreateError,
     TariffDoesNotExist,
 )
+from shared.exceptions.clients import HTTPClientException
 from shared.providers.payments.factory import ProviderFactory
 from shared.schemas.payment import PaymentAddSchema, PaymentAmount, PaymentConfirmation
 from shared.schemas.subscription import SubscriptionAddSchema
@@ -101,8 +102,8 @@ class SubscriptionService(SubscriptionServiceABC):
 
         payment_response = payment_provider.create_payment(payment_add_schema)
         if not payment_response:
-            # FIXME: error 500
-            raise Exception
+            raise HTTPClientException
+
         logger.info(f"\nPayment Response: Payment Id: {payment_response.id}")
         logger.info(f"\n\nPayment Response: Redirect url='{payment_response.redirect_url}'\n\n")
 
@@ -140,6 +141,7 @@ class SubscriptionService(SubscriptionServiceABC):
             PayStatusDoesNotExist
             PaymentCreateError
             SubscriptionCreateError
+            HTTPClientException
         """
         async with self._subscription_uow:
             pay_system = await self._get_pay_system(pay_system_alias)
