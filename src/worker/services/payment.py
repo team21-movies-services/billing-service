@@ -1,8 +1,12 @@
 import logging
 from dataclasses import dataclass
+from uuid import UUID
 
 from shared.constants import EventTypes
-from shared.providers.payments.factory import ProviderFactory
+from shared.database.dto import UserPaymentDTO
+from shared.exceptions.payments import PaymentExternalApiException
+from shared.providers.payments import BasePaymentProvider, ProviderFactory
+from shared.schemas.status import StatusEnum
 from shared.services import EventSenderService
 from worker.core.config import Settings
 from worker.uow import UnitOfWorkABC
@@ -17,26 +21,38 @@ class PaymentStatusService:
     _uow: UnitOfWorkABC
     _event_service: EventSenderService
 
-    def update_pending_payments(self):
+    def update_pending_payments_and_activate_subs(self, delay: int = 0):
         with self._uow:
-            payments = self._uow.payment_repo.get_payments_with_status("pending", 5)
+            payments = self._uow.payment_repo.get_payments_with_status("pending", delay)
             for payment in payments:
-                provider = self._provider_factory.get_payment_provider(payment.system)
-                updated_payment = provider.get_payment_status(payment)
-                if not updated_payment:
+                provider = self._provider_factory.get_payment_provider(payment.pay_system.alias)
+                new_status = self._request_new_payment_status(provider, payment)
+                if new_status == payment.pay_status.alias:
+                    logger.info("Same status for payment id: %s, status %s", payment.payment_id, new_status)
                     continue
-                is_updated = self._uow.payment_repo.set_payment_status(payment)
+                is_updated = self._uow.payment_repo.set_status(payment.id, new_status)
                 if is_updated:
-                    payment_data = {
-                        "user_id": payment.user_id,
-                        "payment_id": updated_payment.id,
-                        "payment_status": updated_payment.status,
-                    }
-                    self._event_service.send_event(event_type=EventTypes.SuccesSubscription, data=payment_data)
-                    logger.info(
-                        "Updated payment with id %s to status %s",
-                        updated_payment.id,
-                        updated_payment.status,
-                    )
+                    logger.info("Updated payment with id %s to status %s", payment.id, new_status)
+
+                if provider.map_status(new_status) == StatusEnum.succeeded:
+                    self._uow.subscription_repo.activate_by_payment_id(payment.id)
+                    self._send_event(payment.user_id, payment.id, new_status, EventTypes.SuccesSubscription)
+
             self._uow.commit()
             logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)
+
+    def _request_new_payment_status(self, provider: BasePaymentProvider, payment: UserPaymentDTO) -> str:
+        try:
+            new_status = provider.get_payment_status(payment)
+        except PaymentExternalApiException:
+            new_status = "failed"
+            logger.warning("Setting status %s to payment %s due to external api error", new_status, payment.id)
+        return new_status
+
+    def _send_event(self, user_id: UUID, payment_id: UUID, payment_status: str, event_type: EventTypes) -> None:
+        payment_data = {
+            "user_id": user_id,
+            "payment_id": payment_id,
+            "payment_status": payment_status,
+        }
+        self._event_service.send_event(event_type=event_type, data=payment_data)

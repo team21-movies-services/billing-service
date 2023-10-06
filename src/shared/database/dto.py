@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from shared.database.models.tariff import TariffPeriodUnit
 
 
@@ -45,16 +45,16 @@ class PaySystemDTO(BaseDTO):
 
 
 class UserPaymentDTO(BaseDTO):
-    id: UUID | None
-    pay_system: PaySystemDTO | None
-    pay_status: PayStatusDTO | None
+    id: UUID
+    pay_system: PaySystemDTO
+    pay_status: PayStatusDTO
     user_id: UUID
-    pay_system_id: UUID | None
-    pay_status_id: UUID | None
+    pay_system_id: UUID
+    pay_status_id: UUID
     payment_id: UUID
     amount: int
     purpose: str
-    json_detail: dict
+    json_sale: dict = Field(default={})
 
 
 class UserSubscriptionDTO(BaseDTO):
@@ -68,6 +68,7 @@ class UserSubscriptionDTO(BaseDTO):
     is_disabled: bool
     renew: bool
     renew_try_count: int
+    last_check: datetime | None
 
     def get_yookassa_payment_json(self) -> dict:
         payment = {

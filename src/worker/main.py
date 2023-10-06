@@ -21,11 +21,11 @@ def main():
     if settings.sentry.enable:
         sentry_service = app.resolve(SentryService)
         sentry_service.start_sentry()
-    scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, payment_service.update_pending_payments)
+    scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, payment_service.update_pending_payments_and_activate_subs)
 
     subscription_service = app.resolve(SubscriptionService)
     scheduler.daily(DISABLE_SUBSCRIPTIONS_INTERVAL, subscription_service.disable, alias="Subscriptions disable")
-
+    scheduler.cyclic(PENDING_PAYMENTS_CHECK_INTERVAL, subscription_service.make_recurrent_payment)
     while True:
         scheduler.exec_jobs()
         sleep(1)

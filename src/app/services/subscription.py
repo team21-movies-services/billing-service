@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from uuid import UUID
 
+from dateutil.relativedelta import relativedelta
+from shared.database.models.tariff import Tariff, TariffPeriodUnit
 from shared.exceptions import (
     PaymentCreateError,
     PayStatusDoesNotExist,
@@ -112,15 +114,21 @@ class SubscriptionService(SubscriptionServiceABC):
     async def _create_user_subscription(
         self,
         user_id: UUID,
-        tariff_id: UUID,
         payment_id: UUID,
+        tariff: Tariff,
         renew: bool,
     ):
         period_start = datetime.utcnow()
-        period_end = datetime.utcnow()
+        period_unit_map = {
+            TariffPeriodUnit.day.value: 'days',
+            TariffPeriodUnit.month.value: 'months',
+            TariffPeriodUnit.year.value: 'years',
+        }
+        period_delta = {period_unit_map[tariff.period_unit]: tariff.period}
+        period_end = datetime.utcnow() + relativedelta(**period_delta)  # type: ignore
         subscription_add = SubscriptionAddSchema(
             user_id=user_id,
-            tariff_id=tariff_id,
+            tariff_id=tariff.id,
             user_payment_id=payment_id,
             is_disabled=True,
             period_start=period_start,
@@ -159,7 +167,7 @@ class SubscriptionService(SubscriptionServiceABC):
             )
 
             await self._update_payment(payment.id, payment_response.id)
-            await self._create_user_subscription(user_id, tariff.id, payment.id, renew)
+            await self._create_user_subscription(user_id, payment.id, tariff, renew)
 
             await self._subscription_uow.commit()
 
