@@ -31,7 +31,8 @@ class HttpxHttpClient(BaseHttpClient):
         )
         if response.status_code != codes.OK:
             raise HTTPClientException(f"Error sending request. detail={response.content!r}")
-        return response.json()
+        if response.content:
+            return response.json()
 
     def get(
         self,
