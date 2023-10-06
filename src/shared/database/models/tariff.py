@@ -8,9 +8,9 @@ from sqlalchemy.orm import Mapped
 
 
 class TariffPeriodUnit(StrEnum):
-    day = auto()
-    month = auto()
-    year = auto()
+    days = auto()
+    months = auto()
+    years = auto()
 
 
 class Tariff(BaseModel, IdMixin, TsMixinCreated, TsMixinUpdated):

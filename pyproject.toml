@@ -34,6 +34,8 @@ sqladmin = "^0.15.0"
 yookassa = "^2.4.0"
 itsdangerous = "^2.1.2"
 sentry-sdk = "^1.31.0"
+python-dateutil = "^2.8.2"
+types-python-dateutil = "^2.8.19.14"
 
 
 [tool.poetry.group.dev.dependencies]
