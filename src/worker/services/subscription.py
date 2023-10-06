@@ -1,9 +1,10 @@
 import logging
 from dataclasses import dataclass
-from typing import assert_never
 
+from shared.constants import EventTypes
 from shared.database.dto import UserSubscriptionDTO
 from shared.exceptions import PaymentCancelledException, PaymentExternalApiException
+from shared.services import EventSenderService
 from worker.core.config import Settings
 from worker.providers import ProviderFactory
 from worker.schemas import ErrorAction
@@ -18,12 +19,20 @@ class SubscriptionService:
     _provider_factory: ProviderFactory
     _settings: Settings
     _uow: UnitOfWorkABC
+    _event_service: EventSenderService
 
     def disable(self):
         with self._uow:
             subs = self._uow.subscription_repo.disable()
             self._uow.commit()
             # TODO: отправка события о деактивации подписки
+            for sub in subs:
+                cancel_event_data = {
+                    "user_id": sub.user_id,
+                    "sub_id": sub.id,
+                    "tariff_id": sub.tariff_id,
+                }
+                self._event_service.send_event(event_type=EventTypes.CancelSubscripton, data=cancel_event_data)
             logger.info("Subscriptions with ids %s disabled.", ", ".join(str(sub.id) for sub in subs))
         logger.info("Subscriptions disable task complete")
 
@@ -65,6 +74,5 @@ class SubscriptionService:
             case ErrorAction.set_inactive:
                 self._uow.subscription_repo.disable_one(subscription)
                 # TODO: Отправить сообщение что подписка отменена
-            case _ as unreachable:
-                assert_never(unreachable)
+            case _:
                 raise NotImplementedError
