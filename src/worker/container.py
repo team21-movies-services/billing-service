@@ -1,5 +1,6 @@
 from rodi import Container
 from shared.clients import BaseHttpClient, HttpxHttpClient
+from shared.core.config import SharedSettings
 from shared.services import EventSenderService
 from worker.clients import DbClientABC, SQLAlchemyDbClient
 from worker.core.config import Settings
@@ -15,8 +16,10 @@ from worker.uow import SqlAlchemyUoW, UnitOfWorkABC
 
 app = Container()
 settings = Settings()
+shared_settings = SharedSettings()
 
 app.register(Settings, instance=settings)
+app.register(SharedSettings, instance=shared_settings)
 
 
 # Logging
