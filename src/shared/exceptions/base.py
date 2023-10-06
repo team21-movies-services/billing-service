@@ -14,6 +14,7 @@ class ExceptionEnum(enum.Enum):
 class BaseExceptionInfo(ExceptionEnum):
     BASE_ERROR = "0000", "Something went wrong ..."
     BASE_NOT_EXISTS_ERROR = "3000", "Not exists"
+    BASE_CLIENT_ERROR = "2000", "Something went wrong ..."
 
 
 class BaseError(Exception):
@@ -33,3 +34,10 @@ class BaseDoesNotExist(BaseError):
 
     code: str = BaseExceptionInfo.BASE_NOT_EXISTS_ERROR.code
     error: str = BaseExceptionInfo.BASE_ERROR.error
+
+
+class BaseClientException(BaseError):
+    """Base Client Exception"""
+
+    code: str = BaseExceptionInfo.BASE_CLIENT_ERROR.code
+    error: str = BaseExceptionInfo.BASE_CLIENT_ERROR.error
