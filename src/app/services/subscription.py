@@ -74,7 +74,7 @@ class SubscriptionService(SubscriptionServiceABC):
         return payment
 
     async def _update_payment(self, payment_id: UUID, external_payment_id: str):
-        status = await self._get_payment_status("waiting_for_capture")
+        status = await self._get_payment_status("pending")
         await self._subscription_uow.payment_repository.update_payment(
             id=payment_id,
             payment_id=external_payment_id,
@@ -144,7 +144,7 @@ class SubscriptionService(SubscriptionServiceABC):
         async with self._subscription_uow:
             pay_system = await self._get_pay_system(pay_system_alias)
             tariff = await self._get_tariff(tariff_id)
-            status = await self._get_payment_status("pending")
+            status = await self._get_payment_status("created")
 
             tariff_cost = str(tariff.cost)
             payment = await self._create_payment(user_id, pay_system.id, status.id, tariff_cost)
