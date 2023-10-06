@@ -60,7 +60,7 @@ class UserPaymentsRepository:
             amount=subscription.tariff.cost,
             purpose=subscription.tariff.info(),
             user_id=subscription.user_id,
-            json_sale={},
+            json_detail={},
         )
         self._session.add(payment)
         self._session.flush((payment,))
