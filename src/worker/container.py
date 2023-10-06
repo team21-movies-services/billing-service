@@ -1,9 +1,11 @@
 from rodi import Container
 from shared.clients import BaseHttpClient, HttpxHttpClient
 from shared.core.config import SharedSettings
-from shared.providers.payments.factory import ProviderFactory
-from shared.providers.payments.mock_provider import MockPaymentProvider
-from shared.providers.payments.yookassa_provider import YookassaPaymentProvider
+from shared.providers.payments import (
+    MockPaymentProvider,
+    ProviderFactory,
+    YookassaPaymentProvider,
+)
 from shared.services import EventSenderService
 from shared.settings import YookassaBaseConfig
 from worker.clients import DbClientABC, SQLAlchemyDbClient

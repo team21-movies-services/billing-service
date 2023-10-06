@@ -1,7 +1,7 @@
 """upd_user_peyments_json_sale
 
 Revision ID: c9138c25d377
-Revises: 04e65071a096
+Revises: 577c8e189680
 Create Date: 2023-10-05 20:27:06.190664
 
 """
@@ -13,7 +13,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = 'c9138c25d377'
-down_revision: Union[str, None] = '04e65071a096'
+down_revision: Union[str, None] = '577c8e189680'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

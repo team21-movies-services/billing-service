@@ -1,7 +1,7 @@
 from enum import StrEnum, auto
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PaymentSchema(BaseModel):
@@ -45,3 +45,20 @@ class PaymentAddSchema(BaseModel):
     payment_method_data: PaymentMethod = PaymentMethod()
     save_payment_method: bool = True
     capture: bool = True
+
+
+class ErrorAction(StrEnum):
+    set_inactive = "set_inactive"
+    retry = "retry"
+
+
+class UserPaymentCreatedSchema(BaseModel):
+    id: UUID | None
+    system_alias: str
+    status_alias: str
+    user_id: UUID
+    payment_id: UUID
+    error_action: ErrorAction | None = Field(default=None)
+    amount: int
+    purpose: str
+    json_sale: dict = Field(default={})
