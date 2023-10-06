@@ -15,6 +15,7 @@ class BaseExceptionInfo(ExceptionEnum):
     BASE_ERROR = "0000", "Something went wrong ..."
     BASE_NOT_EXISTS_ERROR = "3000", "Not exists"
     BASE_CREATE_ERROR = "5000", "Error create"
+    BASE_CLIENT_ERROR = "2000", "Something went wrong ..."
 
 
 class BaseError(Exception):
@@ -36,8 +37,15 @@ class BaseDoesNotExist(BaseError):
     error: str = BaseExceptionInfo.BASE_ERROR.error
 
 
-class BaseCreateError(BaseError):
-    """Base create error Exception"""
+class BaseClientException(BaseError):
+    """Base Client Exception"""
 
-    code: str = BaseExceptionInfo.BASE_NOT_EXISTS_ERROR.code
-    error: str = BaseExceptionInfo.BASE_ERROR.error
+    code: str = BaseExceptionInfo.BASE_CLIENT_ERROR.code
+    error: str = BaseExceptionInfo.BASE_CLIENT_ERROR.error
+
+
+class BaseCreateError(BaseError):
+    """Base Create Exception"""
+
+    code: str = BaseExceptionInfo.BASE_CREATE_ERROR.code
+    error: str = BaseExceptionInfo.BASE_CREATE_ERROR.error
