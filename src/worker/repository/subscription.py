@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Generator
+from uuid import UUID
 
 from shared.database.dto import UserSubscriptionDTO
 from shared.database.models import UserSubscription
@@ -94,4 +95,9 @@ class SubscriptionRepository:
     def disable_one(self, subscription: UserSubscriptionDTO):
         query = update(UserSubscription).where(UserSubscription.id == subscription.id).values(disabled=True)
         logger.info("Disabling subscription %s", subscription.id)
+        self._session.execute(query)
+
+    def activate_by_payment_id(self, payment_id: UUID) -> None:
+        query = update(UserSubscription).where(UserSubscription.user_payment_id == payment_id).values(is_disabled=False)
+        logger.info("Subscription with user_payment_id %s has activated.", payment_id)
         self._session.execute(query)

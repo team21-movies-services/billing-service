@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
 from worker.schemas import UserPaymentCreatedSchema
+from worker.schemas.status import StatusEnum
 
 
 class BasePaymentProvider(ABC):
@@ -13,4 +14,9 @@ class BasePaymentProvider(ABC):
     @abstractmethod
     def make_recurrent_payment(self, subscription: UserSubscriptionDTO) -> UserPaymentCreatedSchema:
         """Make recurrent payment with saved data"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def map_status(self, status: str) -> StatusEnum:
+        """Return mapped payment status"""
         raise NotImplementedError

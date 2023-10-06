@@ -92,3 +92,6 @@ class YookassaPaymentProvider(BasePaymentProvider):
             return ErrorAction.set_inactive
 
         return ErrorAction.retry
+
+    def map_status(self, status: str) -> StatusEnum:
+        return status_enum_mapping[status]
