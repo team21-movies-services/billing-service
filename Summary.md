@@ -33,6 +33,12 @@
 1. Деактивация просроченных подписок - https://github.com/team21-movies-services/billing-service/blob/main/src/worker/services/subscription.py#L20
 
 
+## Схема базы данных
+
+Ссылка - https://drive.google.com/file/d/1vjEMku2iBeXOBpgojDEb3eaz7e-r1w4M/view?usp=sharing
+
+![Schema](./doc/DB.png)
+
 Авторы:
 
 * [Михаил Спиридонов](https://github.com/mspiridonov2706)
