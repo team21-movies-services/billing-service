@@ -28,6 +28,7 @@ class SubscriptionRepository:
             UserSubscription.renew == True,  # noqa: E712
             or_(UserSubscription.last_check < target_date, UserSubscription.last_check == None),  # noqa: E711
         ]
+        logger.info("Checking subscriptions for renew")
         while True:
             query = (
                 select(UserSubscription)
@@ -57,15 +58,20 @@ class SubscriptionRepository:
 
         return [SubscriptionSchema.model_validate(db_obj) for db_obj in db_objs]
 
-    def increment_retries(self, subscription: UserSubscriptionDTO) -> int:
+    def increment_retries(self, subscription: UserSubscriptionDTO, reset: bool = False) -> int:
         query = select(UserSubscription).where(UserSubscription.id == subscription.id)
         sub = self._session.execute(query).scalar_one()
-        sub.renew_try_count += 1
-        retries = sub.renew_try_count
-        logger.info("Incrementing subscription %s renew tries count, new value %s", subscription.id, retries)
+
+        if reset:
+            sub.renew_try_count = 0
+            retries = sub.renew_try_count
+        else:
+            sub.renew_try_count += 1
+            retries = sub.renew_try_count
+            logger.info("Incrementing subscription %s renew tries count, new value %s", subscription.id, retries)
         return retries
 
-    def update_end_period(self, subscription: UserSubscriptionDTO):
+    def update_end_period(self, subscription: UserSubscriptionDTO) -> UserSubscriptionDTO:
         to_days_map = {
             TariffPeriodUnit.day: 1,
             TariffPeriodUnit.month: 30,
@@ -77,9 +83,15 @@ class SubscriptionRepository:
         subscription_obj = self._session.execute(query).scalar_one()
         subscription_obj.period_end += tariff_period
         logger.info("Updated end period for subscription %s", subscription.id)
+        return UserSubscriptionDTO.model_validate(subscription_obj)
 
     def update_last_checked(self, subscription: UserSubscriptionDTO):
         current_time = datetime.utcnow()
         query = update(UserSubscription).where(UserSubscription.id == subscription.id).values(last_check=current_time)
         logger.info("Setting last checked date for subscription %s", subscription.id)
+        self._session.execute(query)
+
+    def disable_one(self, subscription: UserSubscriptionDTO):
+        query = update(UserSubscription).where(UserSubscription.id == subscription.id).values(disabled=True)
+        logger.info("Disabling subscription %s", subscription.id)
         self._session.execute(query)

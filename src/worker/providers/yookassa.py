@@ -4,6 +4,7 @@ from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
 from shared.exceptions import PaymentCancelledException, PaymentExternalApiException
 from worker.core.config import Settings
 from worker.schemas.payment import ErrorAction, UserPaymentCreatedSchema
+from worker.schemas.status import StatusEnum
 from yookassa import Configuration, Payment
 from yookassa.client import (
     ApiError,
@@ -32,6 +33,13 @@ yookassa_exceptions = (
 )
 
 
+status_enum_mapping = {
+    "canceled": StatusEnum.canceled,
+    "succeeded": StatusEnum.succeeded,
+    "pending": StatusEnum.pending,
+}
+
+
 class YookassaPaymentProvider(BasePaymentProvider):
     def __init__(self, settings: Settings):
         Configuration.configure(settings.yookassa.shop_id, settings.yookassa.api_key)
@@ -55,8 +63,11 @@ class YookassaPaymentProvider(BasePaymentProvider):
         payment_json = subscription.get_yookassa_payment_json()
         try:
             payment = Payment.create(payment_json)
+            if payment.status != "succeeded":
+                error_action = self._handle_cancellation(payment)
+                raise PaymentCancelledException("Payment was cancelled by external API", error_action=error_action)
             logger.info("Payment request results: %s", payment.json())
-        except BadRequestError as e:
+        except yookassa_exceptions as e:
             raise PaymentExternalApiException from e
 
         payment_schema = UserPaymentCreatedSchema(
@@ -68,9 +79,6 @@ class YookassaPaymentProvider(BasePaymentProvider):
             amount=payment.amount.value,
             purpose=subscription.tariff.info(),
         )
-        if payment.cancellation_details:
-            error_action = self._handle_cancellation(payment)
-            raise PaymentCancelledException("Payment was cancelled by external API", error_action=error_action)
         return payment_schema
 
     @staticmethod
@@ -80,12 +88,7 @@ class YookassaPaymentProvider(BasePaymentProvider):
             CancellationDetailsReasonCode.PAYMENT_METHOD_RESTRICTED,
             CancellationDetailsReasonCode.CARD_EXPIRED,
         ]
-        retry_list = [
-            CancellationDetailsReasonCode.INSUFFICIENT_FUNDS,
-            CancellationDetailsReasonCode.PAYMENT_METHOD_LIMIT_EXCEEDED,
-        ]
-
         if payment.cancellation_details.reason in set_inactive_list:
             return ErrorAction.set_inactive
-        if payment.cancellation_details.reason in retry_list:
-            return ErrorAction.retry
+
+        return ErrorAction.retry

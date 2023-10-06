@@ -1,11 +1,13 @@
 import logging
 from dataclasses import dataclass
+from typing import assert_never
 
 from shared.database.dto import UserSubscriptionDTO
 from shared.exceptions import PaymentCancelledException, PaymentExternalApiException
 from worker.core.config import Settings
 from worker.providers import ProviderFactory
 from worker.schemas import ErrorAction
+from worker.schemas.status import StatusEnum
 from worker.uow import UnitOfWorkABC
 
 logger = logging.getLogger(__name__)
@@ -38,17 +40,18 @@ class SubscriptionService:
         new_payment = self._uow.payment_repo.create_blank_payment(subscription)
         provider = self._provider_factory.get_payment_provider(subscription.user_payment.pay_system.alias)
         try:
-            payment_result = provider.make_recurrent_payment(subscription)
-            if payment_result.status_alias == "succeeded":
-                self._uow.subscription_repo.update_end_period(subscription)
-                self._uow.payment_repo.set_status(new_payment.id, payment_result.status_alias)
-            # TODO: Отправить сообщение
-            # TODO: Обнулить счетчик
-        except PaymentExternalApiException:
+            provider.make_recurrent_payment(subscription)
+            self._uow.payment_repo.set_status(new_payment.id, status=StatusEnum.succeeded)
+            self._uow.subscription_repo.update_end_period(subscription)
+            self._uow.subscription_repo.increment_retries(subscription, reset=True)
+            # TODO: Отправить сообщение что подписка продлена
+        except PaymentExternalApiException as e:
             logger.warning("Error occurred while make recurrent payment for subscription %s", subscription.id)
+            logger.error(e)
             self._uow.subscription_repo.increment_retries(subscription)
-            self._uow.payment_repo.set_status(new_payment.id, "failed")
+            self._uow.payment_repo.set_status(new_payment.id, StatusEnum.failed)
         except PaymentCancelledException as e:
+            self._uow.payment_repo.set_status(new_payment.id, StatusEnum.canceled)
             self._handle_error_action(subscription, e.error_action)
         finally:
             self._uow.subscription_repo.update_last_checked(subscription)
@@ -57,11 +60,11 @@ class SubscriptionService:
     def _handle_error_action(self, subscription: UserSubscriptionDTO, payment_action: ErrorAction):
         match payment_action:
             case ErrorAction.retry:
-                logger.error("Repeat later")
                 self._uow.subscription_repo.increment_retries(subscription)
-                # TODO: Send message about an error(or no)
+                # TODO: Отправить сообщение что возникла ошибка при списании
             case ErrorAction.set_inactive:
-                logger.error("SET INACTIVE")
-                self._uow.subscription_repo.disable()
-            case _:
-                pass
+                self._uow.subscription_repo.disable_one(subscription)
+                # TODO: Отправить сообщение что подписка отменена
+            case _ as unreachable:
+                assert_never(unreachable)
+                raise NotImplementedError
