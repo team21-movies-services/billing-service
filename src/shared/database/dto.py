@@ -45,12 +45,12 @@ class PaySystemDTO(BaseDTO):
 
 
 class UserPaymentDTO(BaseDTO):
-    id: UUID | None
-    pay_system: PaySystemDTO | None
-    pay_status: PayStatusDTO | None
+    id: UUID
+    pay_system: PaySystemDTO
+    pay_status: PayStatusDTO
     user_id: UUID
-    pay_system_id: UUID | None
-    pay_status_id: UUID | None
+    pay_system_id: UUID
+    pay_status_id: UUID
     payment_id: UUID
     amount: int
     purpose: str
