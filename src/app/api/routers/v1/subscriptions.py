@@ -29,6 +29,7 @@ async def _subscription_buy(
         pay_system_alias=pay_system,
         user_id=auth_data.user_id,
         tariff_id=subscription_request.tariff_id,
+        renew=subscription_request.renew,
     )
     return RedirectResponse(redirect_url, status_code=302)
 

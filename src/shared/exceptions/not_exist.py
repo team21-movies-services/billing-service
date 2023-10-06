@@ -1,5 +1,12 @@
 from .base import BaseDoesNotExist, ExceptionEnum
 
+__all__ = [
+    "TariffDoesNotExist",
+    "PayStatusDoesNotExist",
+    "PaySystemDoesNotExist",
+    "UserCurrentSubscriptionNotExist",
+]
+
 
 class NotExistsExceptionInfo(ExceptionEnum):
     OBJECT_NOT_EXIST = "3001", "Object does not exists."
@@ -7,10 +14,6 @@ class NotExistsExceptionInfo(ExceptionEnum):
     USER_SUBSCRIPTION_NOT_EXISTS = "3003", "User doesn't have active subscription"
     PAY_SYSTEM_NOT_EXISTS = "3004", "Pay system not exists."
     PAY_STATUS_SYSTEM_NOT_EXISTS = "3005", "Pay status not exists."
-
-
-class CreateExceptionInfo(ExceptionEnum):
-    PAYMENT_CREATE_ERROR = "5001", "Some error to create payment."
 
 
 class ObjectDoesNotExist(BaseDoesNotExist):
@@ -32,13 +35,6 @@ class PayStatusDoesNotExist(BaseDoesNotExist):
 
     code: str = NotExistsExceptionInfo.PAY_STATUS_SYSTEM_NOT_EXISTS.code
     error: str = NotExistsExceptionInfo.PAY_STATUS_SYSTEM_NOT_EXISTS.error
-
-
-class PaymentCreateError(BaseDoesNotExist):
-    """Payment create error Exception"""
-
-    code: str = CreateExceptionInfo.PAYMENT_CREATE_ERROR.code
-    error: str = CreateExceptionInfo.PAYMENT_CREATE_ERROR.error
 
 
 class PaySystemDoesNotExist(BaseDoesNotExist):

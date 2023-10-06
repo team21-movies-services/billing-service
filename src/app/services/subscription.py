@@ -1,15 +1,18 @@
 import logging
 from abc import ABC, abstractmethod
+from datetime import datetime
 from uuid import UUID
 
-from shared.exceptions.not_exist import (
+from shared.exceptions import (
     PaymentCreateError,
     PayStatusDoesNotExist,
     PaySystemDoesNotExist,
+    SubscriptionCreateError,
     TariffDoesNotExist,
 )
 from shared.providers.payments.factory import ProviderFactory
 from shared.schemas.payment import PaymentAddSchema, PaymentAmount, PaymentConfirmation
+from shared.schemas.subscription import SubscriptionAddSchema
 
 from app.schemas.request.payment import UserPaymentAddSchema
 from app.schemas.response.subscriptions import UserSubscriptionResponse
@@ -20,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class SubscriptionServiceABC(ABC):
     @abstractmethod
-    async def buy(self, pay_system_alias: str, user_id: UUID, tariff_id: UUID) -> str:
+    async def buy(self, pay_system_alias: str, user_id: UUID, tariff_id: UUID, renew: bool) -> str:
         raise NotImplementedError
 
     @abstractmethod
@@ -105,7 +108,29 @@ class SubscriptionService(SubscriptionServiceABC):
 
         return payment_response
 
-    async def buy(self, pay_system_alias: str, user_id: UUID, tariff_id: UUID) -> str:
+    async def _create_user_subscription(
+        self,
+        user_id: UUID,
+        tariff_id: UUID,
+        payment_id: UUID,
+        renew: bool,
+    ):
+        period_start = datetime.utcnow()
+        period_end = datetime.utcnow()
+        subscription_add = SubscriptionAddSchema(
+            user_id=user_id,
+            tariff_id=tariff_id,
+            user_payment_id=payment_id,
+            is_disabled=True,
+            period_start=period_start,
+            period_end=period_end,
+            renew=renew,
+        )
+        subscription = await self._subscription_uow.subscription_repository.add_subscription(subscription_add)
+        if not subscription:
+            raise SubscriptionCreateError
+
+    async def buy(self, pay_system_alias: str, user_id: UUID, tariff_id: UUID, renew: bool) -> str:
         """
         Метод покупки пользователем подписки
 
@@ -113,6 +138,8 @@ class SubscriptionService(SubscriptionServiceABC):
             PaySystemDoesNotExist
             TariffDoesNotExist
             PayStatusDoesNotExist
+            PaymentCreateError
+            SubscriptionCreateError
         """
         async with self._subscription_uow:
             pay_system = await self._get_pay_system(pay_system_alias)
@@ -130,6 +157,7 @@ class SubscriptionService(SubscriptionServiceABC):
             )
 
             await self._update_payment(payment.id, payment_response.id)
+            await self._create_user_subscription(user_id, tariff.id, payment.id, renew)
 
             await self._subscription_uow.commit()
 
