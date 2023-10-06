@@ -1,7 +1,7 @@
 """add_tariff_and_pay_system
 
 Revision ID: 04e65071a096
-Revises: 1e06c683f268
+Revises: c9138c25d377
 Create Date: 2023-09-25 16:34:28.576113
 
 """
@@ -14,7 +14,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '04e65071a096'
-down_revision: Union[str, None] = 'cd9807ed90b2'
+down_revision: Union[str, None] = 'c9138c25d377'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
