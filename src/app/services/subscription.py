@@ -76,15 +76,16 @@ class SubscriptionService(SubscriptionServiceABC):
 
         return payment
 
-    async def _update_payment(self, payment_id: UUID, external_payment_id: str):
+    async def _update_payment(self, payment_id: UUID, external_payment_id: str, purpose: str):
         status = await self._get_payment_status("pending")
         await self._subscription_uow.payment_repository.update_payment(
             id=payment_id,
             payment_id=external_payment_id,
+            purpose=purpose,
             status_id=status.id,
         )
 
-    async def _create_external_payment(self, pay_system_alias: str, payment_id: UUID, currency_code: str, amount: str):
+    async def _create_external_payment(self, pay_system_alias: str, currency_code: str, amount: str, purpose: str):
         payment_provider = self.payment_factory.get_payment_provider(provider_name=pay_system_alias)
 
         payment_amount = PaymentAmount(
@@ -94,8 +95,6 @@ class SubscriptionService(SubscriptionServiceABC):
         payment_confirmation = PaymentConfirmation(
             return_url=payment_provider.get_return_url(),
         )
-        # FIXME: add payment integer number
-        purpose = f"Order No. {payment_id}"
         payment_add_schema = PaymentAddSchema(
             amount=payment_amount,
             confirmation=payment_confirmation,
@@ -159,14 +158,16 @@ class SubscriptionService(SubscriptionServiceABC):
             tariff_cost = str(tariff.cost)
             payment = await self._create_payment(user_id, pay_system.id, status.id, tariff_cost)
 
+            # FIXME: add payment integer number
+            purpose = f"Order No. {payment.id}"
             payment_response = await self._create_external_payment(
                 pay_system_alias=pay_system.alias,
-                payment_id=payment.id,
                 amount=tariff_cost,
                 currency_code=pay_system.currency_code,
+                purpose=purpose,
             )
 
-            await self._update_payment(payment.id, payment_response.id)
+            await self._update_payment(payment.id, payment_response.id, purpose)
             await self._create_user_subscription(user_id, payment.id, tariff, renew)
 
             await self._subscription_uow.commit()

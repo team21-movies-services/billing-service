@@ -11,7 +11,10 @@ class WorkerSettings(BaseSettings):
     log_level: str = Field(default="DEBUG")
     pending_payments_check: int = Field(default=10)
     disable_subs_h: int = Field(default=19)
-    disable_subs_m: int = Field(default=14)
+    disable_subs_m: int = Field(default=00)
+
+    renew_subs_h: int = Field(default=17)
+    renew_subs_m: int = Field(default=00)
 
     tz: timezone = Field(default=timezone.utc)
 
