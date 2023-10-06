@@ -24,3 +24,11 @@ def test_migrations_stairway(monkeypatch, revision: Script, single_use_database)
     downgrade(alembic_config, revision.down_revision or '-1')
     upgrade(alembic_config, revision.revision)
     monkeypatch.delenv('MIGRATION_TEST')
+
+
+@pytest.mark.parametrize('revision', get_revisions())
+def test_revision_branching(revision: Script, alembic_script_directory):
+    rev_children = revision._all_nextrev
+    if len(rev_children) > 1:
+        revisions_paths = [alembic_script_directory.get_revision(rev).path for rev in rev_children]
+        pytest.fail(f"Revision {revision.path} has more than one child revision. {revisions_paths}")

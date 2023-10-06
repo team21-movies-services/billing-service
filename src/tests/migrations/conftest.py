@@ -2,6 +2,7 @@ import time
 
 import pytest
 from alembic.config import Config
+from alembic.script import ScriptDirectory
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, drop_database
 
@@ -11,6 +12,11 @@ from app.core.config import settings
 @pytest.fixture()
 def alembic_config():
     return Config("alembic.ini")
+
+
+@pytest.fixture()
+def alembic_script_directory(alembic_config):
+    return ScriptDirectory.from_config(alembic_config)
 
 
 @pytest.fixture(scope="module")
