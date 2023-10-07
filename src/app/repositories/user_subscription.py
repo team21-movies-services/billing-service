@@ -5,7 +5,7 @@ from uuid import UUID
 from shared.database.models.user_subscription import UserSubscription
 from shared.exceptions.not_exist import UserCurrentSubscriptionNotExist
 from shared.schemas.subscription import SubscriptionAddSchema
-from sqlalchemy import insert, select, update
+from sqlalchemy import desc, insert, not_, select, update
 from sqlalchemy.orm import contains_eager
 
 from app.repositories.base import SQLAlchemyRepo
@@ -37,12 +37,17 @@ class UserSubscriptionRepository(SQLAlchemyRepo, UserSubscriptionRepositoryABC):
     async def get_user_current_subscription(self, user_id: UUID) -> UserSubscriptionResponse:
         query = (
             select(UserSubscription)
-            .where(UserSubscription.user_id == user_id, UserSubscription.period_end > datetime.utcnow())
+            .where(
+                UserSubscription.user_id == user_id,
+                UserSubscription.period_end > datetime.utcnow(),
+                not_(UserSubscription.is_disabled),
+            )
+            .order_by(desc(UserSubscription.period_start))
             .join(UserSubscription.tariff)
             .options(contains_eager(UserSubscription.tariff))
         )
         result = await self._session.execute(query)
-        db_obj = result.scalar_one_or_none()
+        db_obj = result.scalars().first()
         if not db_obj:
             raise UserCurrentSubscriptionNotExist
         return UserSubscriptionResponse.model_validate(db_obj)
