@@ -7,8 +7,8 @@ from shared.database.dto import UserPaymentDTO, UserSubscriptionDTO
 from shared.database.models import PayStatus, UserPayment
 from shared.database.models.base import BaseModel
 from sqlalchemy import select
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm import Session, contains_eager
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 logger = logging.getLogger(__name__)
 
