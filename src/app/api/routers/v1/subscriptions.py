@@ -31,7 +31,7 @@ async def _subscription_buy(
         tariff_id=subscription_request.tariff_id,
         renew=subscription_request.renew,
     )
-    return RedirectResponse(redirect_url, status_code=302)
+    return RedirectResponse(redirect_url, status_code=status.HTTP_302_FOUND)
 
 
 @router.get(

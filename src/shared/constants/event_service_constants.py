@@ -2,7 +2,7 @@ from enum import StrEnum
 
 
 class EventTypes(StrEnum):
-    SuccesSubscription = "Подписка оформлена"
-    CancelSubscripton = "Подписка отменена"
-    RenewalSubscription = "Подписка продлена"
-    ErrorRetry = "Ошибка при списании"
+    succes_subscription = "Подписка оформлена"
+    cancel_subscription = "Подписка отменена"
+    renewal_subscription = "Подписка продлена"
+    error_retry = "Ошибка при списании"
