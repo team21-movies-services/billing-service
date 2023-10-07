@@ -30,7 +30,7 @@ class UserPaymentsRepository:
             .where(UserPayment.created_at <= target_time)
             .options(contains_eager(UserPayment.pay_status))
             .options(contains_eager(UserPayment.pay_system))
-            .limit(1)
+            .limit(100)
         )
         payments = self._session.execute(query).scalars()
         result = [UserPaymentDTO.model_validate(payment) for payment in payments]

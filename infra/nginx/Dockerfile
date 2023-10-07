@@ -13,5 +13,6 @@ RUN touch /var/run/nginx.pid && \
 
 COPY ./infra/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./infra/nginx/configs/ /etc/nginx/conf.d/
+COPY ./frontend/build/ /usr/share/nginx/html
 
 USER nginx

@@ -7,11 +7,13 @@ from app.middleware.request_id import RequestIdHeaderMiddleware
 
 logger = logging.getLogger(__name__)
 
+origins = ["http://localhost:8000"]
+
 
 def setup_middleware(app: FastAPI):
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=origins,
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,

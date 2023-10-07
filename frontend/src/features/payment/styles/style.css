@@ -1,0 +1,103 @@
+/* @font-face {
+    font-family: ;
+    src: 
+
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Roboto+Mono:wght@400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif; 
+}
+
+.cont {
+  padding: 15px;
+  
+}
+
+.cont * {
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.container__header {
+    border-bottom: solid black;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 50px auto;
+  width: 830px;
+  border: solid black;
+  border-radius: 50px;
+  padding: 0px;
+}
+
+.container__main {
+  display: flex;
+  width: 800px;
+  padding: 0;
+}
+
+.container__main__membership {
+  display: flex;
+  flex-direction: column;
+  width: 385px;
+}
+
+.container__main__form {
+  width: 385px;
+}
+
+.bold_word {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+
+.btn {
+	display: inline-block;
+	padding: 0 16px;
+	margin: 0 15px 15px 0;
+	outline: none;
+	border: none;
+	border-radius: 15px;
+	height: 60px;
+	line-height: 30px;
+	text-decoration: none;
+	vertical-align: top;
+	color: #fff;
+	background-color: #5181b8;
+	cursor: pointer;
+	user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+	overflow: hidden;
+}
+.btn:focus-visible {
+	box-shadow: 0 0 0 3px lightskyblue;
+}
+.btn:hover {
+	opacity: 0.88;
+}
+.btn:active {
+    color:black;
+}
+
+select {
+    border-radius: 10px;
+    width: 340px;
+}
+
+.history__table {
+  padding: 10px;
+  
+
+}
+
+.checkbox {
+  margin-bottom: 30px;
+  margin-right: 15px;
+}

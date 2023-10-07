@@ -1,7 +1,6 @@
 import logging
 
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import RedirectResponse
 
 from app.dependencies.auth import get_auth_data
 from app.schemas.domain.auth import AuthData
@@ -31,7 +30,8 @@ async def _subscription_buy(
         tariff_id=subscription_request.tariff_id,
         renew=subscription_request.renew,
     )
-    return RedirectResponse(redirect_url, status_code=302)
+    return {"redirect_url": redirect_url}
+    # return RedirectResponse(redirect_url, status_code=302)
 
 
 @router.get(
