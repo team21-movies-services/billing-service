@@ -28,8 +28,8 @@ def test_migrations_stairway(monkeypatch, revision: Script, single_use_database)
 
 @pytest.mark.parametrize('revision', get_revisions())
 def test_revision_branching(revision: Script, alembic_script_directory):
-    """Тест проверяет каждую миграцию на наличие только одной дочерней миграции для избежания ветвления"""
+    """Тест проверяет каждую миграцию на наличие не более одной дочерней миграции для избежания ветвления"""
     rev_children = revision._all_nextrev
-    if len(rev_children) != 1:
+    if len(rev_children) > 1:
         revisions_paths = [alembic_script_directory.get_revision(rev).path for rev in rev_children]
         pytest.fail(f"Revision {revision.path} has more than one child revision. {revisions_paths}")
