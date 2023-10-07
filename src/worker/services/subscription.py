@@ -54,7 +54,7 @@ class SubscriptionService:
                 "period_end": subscription.period_end,
                 "user_payment": subscription.user_payment,
             }
-            self._event_service.send_event(event_type=EventTypes.RenewalSubscription, data=renewal_event_data)
+            self._event_service.send_event(event_type=EventTypes.renewal_subscription, data=renewal_event_data)
         except PaymentExternalApiException as e:
             logger.warning("Error occurred while make recurrent payment for subscription %s", subscription.id)
             logger.error(e)
@@ -75,7 +75,7 @@ class SubscriptionService:
                     "user_id": subscription.user_id,
                     "sub_id": subscription.id,
                 }
-                self._event_service.send_event(event_type=EventTypes.ErrorRetry, data=retry_error_data)
+                self._event_service.send_event(event_type=EventTypes.error_retry, data=retry_error_data)
             case ErrorAction.set_inactive:
                 self._uow.subscription_repo.disable_one(subscription)
                 self._send_disable_event(
@@ -92,4 +92,4 @@ class SubscriptionService:
             "sub_id": sub_id,
             "tariff_id": tariff_id,
         }
-        self._event_service.send_event(event_type=EventTypes.CancelSubscripton, data=disable_event_data)
+        self._event_service.send_event(event_type=EventTypes.cancel_subscription, data=disable_event_data)

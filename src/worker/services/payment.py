@@ -36,7 +36,7 @@ class PaymentStatusService:
 
                 if provider.map_status(new_status) == StatusEnum.succeeded:
                     self._uow.subscription_repo.activate_by_payment_id(payment.id)
-                    self._send_event(payment.user_id, payment.id, new_status, EventTypes.SuccesSubscription)
+                    self._send_event(payment.user_id, payment.id, new_status, EventTypes.succes_subscription)
 
             self._uow.commit()
             logger.info("Payments checked, next check in %s second(s)", self._settings.worker.pending_payments_check)
