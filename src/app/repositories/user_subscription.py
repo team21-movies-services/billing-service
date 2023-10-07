@@ -5,7 +5,7 @@ from uuid import UUID
 from shared.database.models.user_subscription import UserSubscription
 from shared.exceptions.not_exist import UserCurrentSubscriptionNotExist
 from shared.schemas.subscription import SubscriptionAddSchema
-from sqlalchemy import insert, not_, select, update
+from sqlalchemy import desc, insert, not_, select, update
 from sqlalchemy.orm import contains_eager
 
 from app.repositories.base import SQLAlchemyRepo
@@ -42,6 +42,7 @@ class UserSubscriptionRepository(SQLAlchemyRepo, UserSubscriptionRepositoryABC):
                 UserSubscription.period_end > datetime.utcnow(),
                 not_(UserSubscription.is_disabled),
             )
+            .order_by(desc(UserSubscription.period_start))
             .join(UserSubscription.tariff)
             .options(contains_eager(UserSubscription.tariff))
         )
