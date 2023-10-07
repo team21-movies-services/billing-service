@@ -1,8 +1,15 @@
+
+
 create_network:
 	@docker network create billing-service-network 2>/dev/null || echo "billing-service-network is up-to-date"
 
 create_test_network:
 	@docker network create test-billing-service-network 2>/dev/null || echo "test-billing-service-network is up-to-date"
+
+#react build
+.PHONY: react
+react:
+	cd frontend && npm run build
 
 # prod start
 .PHONY: up
@@ -32,7 +39,7 @@ uninstall: ## uninstall all services
 # local start
 
 .PHONY: up-local
-up-local: create_network ## up local services
+up-local: create_network react ## up local services
 	@docker-compose -f docker-compose.local.yml -f docker-compose.override.yml up --build
 
 .PHONY: down-local
