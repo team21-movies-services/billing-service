@@ -7,7 +7,7 @@ import {
   TariffId,
 } from './types/type';
 // const API_BASE_URL = ''
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost';
 export const fetchLoadPaymentWays = async (): Promise<PaymentWay[]> => {
   const res = await fetch(`${API_BASE_URL}/api/v1/pay-systems`);
   return res.json();
